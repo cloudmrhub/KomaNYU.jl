@@ -1,12 +1,12 @@
 name = "KomaNYUPlots"
-uuid = "76db0263-63f3-4d26-bb9a-5dba378db904"
+uuid = "9cffba9e-a160-43d8-9293-b8def8c63cbd"
 authors = ["Carlos Castillo Passi <cncastillo@uc.cl>"]
 version = "0.9.0"
 
 [deps]
 Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
 Kaleido_jll = "f7e6163d-2fa5-5f23-b69c-1db539e41963"
-KomaNYUBase = "d0bc0b20-b151-4d03-b2a4-6ca51751cb9c"
+KomaNYUBase = "558670ff-cef0-4d9f-b15b-bd345d36ea0a"
 MAT = "23992714-dd62-5051-b70f-ba57cb901cac"
 PlotlyJS = "f0f68f2c-4968-5e81-91da-67840de0976a"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
