@@ -1,5 +1,5 @@
-abstract type SimulationMethod end #get all available types by using subtypes(KomaMRI.SimulationMethod)
-abstract type SpinStateRepresentation{T<:Real} end #get all available types by using subtypes(KomaMRI.SpinStateRepresentation)
+abstract type SimulationMethod end #get all available types by using subtypes(KomaNYU.SimulationMethod)
+abstract type SpinStateRepresentation{T<:Real} end #get all available types by using subtypes(KomaNYU.SpinStateRepresentation)
 
 #Defined methods:
 include("SimMethods/SimulationMethod.jl")  #Defines simulation methods
@@ -19,7 +19,7 @@ allowing the user to define some of them.
         simulation, respectively
     * "sim_method": defines the type of simulation. The default value is `Bloch()`, but you
         can alternatively use the `BlochDict()` simulation method. Moreover, you have the
-        flexibility to create your own methods without altering the KomaMRI source code
+        flexibility to create your own methods without altering the KomaNYU source code
     * "Δt": raster time for gradients
     * "Δt_rf": raster time for RFs
     * "precision": defines the floating-point simulation precision. You can choose between
@@ -27,11 +27,11 @@ allowing the user to define some of them.
         It's important to note that, especially for GPU operations, using `"f32"` is
         generally much faster
     * "Nblocks": divides the simulation into a specified number of time blocks. This parameter
-        is designed to conserve RAM resources, as **KomaMRI** computes a series of
+        is designed to conserve RAM resources, as **KomaNYU** computes a series of
         simulations consecutively, each with the specified number of blocks determined by
         the value of `"Nblocks"`
     * "Nthreads": divides the **Phantom** into a specified number of threads. Because spins
-        are modeled independently of each other, **KomaMRI** can solve simulations in
+        are modeled independently of each other, **KomaNYU** can solve simulations in
         parallel threads, speeding up the execution time
     * "gpu": is a boolean that determines whether to use GPU or CPU hardware resources, as
         long as they are available on the host computer
@@ -43,7 +43,7 @@ allowing the user to define some of them.
 - `sim_params`: (`::Dict{String,Any}`) dictionary with simulation parameters
 """
 function default_sim_params(sim_params=Dict{String,Any}())
-    sampling_params = KomaMRIBase.default_sampling_params()
+    sampling_params = KomaNYUBase.default_sampling_params()
     get!(sim_params, "gpu", true)
     get!(sim_params, "gpu_device", nothing)
     get!(sim_params, "Nthreads", Threads.nthreads())
@@ -316,7 +316,7 @@ This is a wrapper function to `run_sim_time_iter`, which converts the inputs to 
 
 # Examples
 ```julia-repl
-julia> seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/5.koma_paper/comparison_accuracy/sequences/EPI/epi_100x100_TE100_FOV230.seq");
+julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/5.koma_paper/comparison_accuracy/sequences/EPI/epi_100x100_TE100_FOV230.seq");
 
 julia> sys, obj, seq = Scanner(), brain_phantom2D(), read_seq(seq_file)
 

@@ -1,5 +1,5 @@
-using KomaMRIBase
-using KomaMRICore
+using KomaNYUBase
+using KomaNYUCore
 using Pkg
 using Suppressor
 using BenchmarkTools

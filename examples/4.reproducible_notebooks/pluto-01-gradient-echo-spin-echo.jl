@@ -20,7 +20,7 @@ macro bind(def, element)
 end
 
 # ╔═╡ d6b1729a-874d-11ee-151a-9b0fcce2c4fd
-using KomaMRICore, KomaMRIPlots, FFTW, PlutoPlotly, PlutoUI
+using KomaNYUCore, KomaNYUPlots, FFTW, PlutoPlotly, PlutoUI
 
 # ╔═╡ 5df97874-f09c-4173-a2f6-893db322ccaf
 md"# Understanding basic MRI sequences"
@@ -187,7 +187,7 @@ end
 # ╔═╡ 41d14dec-b852-4316-aefb-c3d08fa43216
 # (2.6) Plot the simulated signal
 begin
-	t_adc_gre = KomaMRICore.get_adc_sampling_times(seq_gre)*1e3
+	t_adc_gre = KomaNYUCore.get_adc_sampling_times(seq_gre)*1e3
 	signal_gre = plot_signal(raw_gre; slider=false)
     addtraces!(signal_gre, t2_decay(t_adc_gre))
 	signal_gre
@@ -349,7 +349,7 @@ raw_t2_star_se = simulate(obj_t2star, seq_se, sys)
 # ╔═╡ 1c79b37e-d4e0-490f-9466-20ce28f017ae
 # (4.8) Compare the signal obtained in (4.7) with the one at (3.4)
 begin
-	t_adc_se = KomaMRICore.get_adc_sampling_times(seq_se)*1e3
+	t_adc_se = KomaNYUCore.get_adc_sampling_times(seq_se)*1e3
 	signal_t2_star_se = plot_signal(raw_t2_star_se; slider=false)
 	addtraces!(signal_t2_star_se, t2_decay(t_adc_se))
 	relayout!(signal_t2_star_se, signal_layout; title="SE")
@@ -391,15 +391,15 @@ end
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
 FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
-KomaMRICore = "4baa4f4d-2ae9-40db-8331-a7d1080e3f4e"
-KomaMRIPlots = "76db0263-63f3-4d26-bb9a-5dba378db904"
+KomaNYUCore = "4baa4f4d-2ae9-40db-8331-a7d1080e3f4e"
+KomaNYUPlots = "76db0263-63f3-4d26-bb9a-5dba378db904"
 PlutoPlotly = "8e989ff0-3d88-8e9f-f020-2b208a939ff0"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 
 [compat]
 FFTW = "~1.8.0"
-KomaMRICore = "~0.8.3"
-KomaMRIPlots = "~0.8.3"
+KomaNYUCore = "~0.8.3"
+KomaNYUPlots = "~0.8.3"
 PlutoPlotly = "~0.4.6"
 PlutoUI = "~0.7.58"
 """
@@ -960,26 +960,26 @@ version = "0.9.21"
     [deps.KernelAbstractions.weakdeps]
     EnzymeCore = "f151be2c-9106-41f4-ab19-57ee4f262869"
 
-[[deps.KomaMRIBase]]
+[[deps.KomaNYUBase]]
 deps = ["Interpolations", "MAT", "MRIBase", "Parameters", "Pkg", "Reexport"]
 git-tree-sha1 = "92a26a7b80bda498639ab7f813a02ee8f2bd4629"
 uuid = "d0bc0b20-b151-4d03-b2a4-6ca51751cb9c"
 version = "0.8.4"
 
-[[deps.KomaMRICore]]
-deps = ["Adapt", "CUDA", "Functors", "KomaMRIBase", "Pkg", "ProgressMeter", "Reexport", "ThreadsX"]
+[[deps.KomaNYUCore]]
+deps = ["Adapt", "CUDA", "Functors", "KomaNYUBase", "Pkg", "ProgressMeter", "Reexport", "ThreadsX"]
 git-tree-sha1 = "e01a73c2314206995c8a0d9e750fc545904d57a4"
 uuid = "4baa4f4d-2ae9-40db-8331-a7d1080e3f4e"
 version = "0.8.3"
 
-[[deps.KomaMRIPlots]]
-deps = ["Interpolations", "Kaleido_jll", "KomaMRIBase", "MAT", "Pkg", "PlotlyJS", "Reexport"]
+[[deps.KomaNYUPlots]]
+deps = ["Interpolations", "Kaleido_jll", "KomaNYUBase", "MAT", "Pkg", "PlotlyJS", "Reexport"]
 git-tree-sha1 = "4777e9582c4cf39772abd8538ebca30eb564d03c"
 uuid = "76db0263-63f3-4d26-bb9a-5dba378db904"
 version = "0.8.3"
 weakdeps = ["PlutoPlotly"]
 
-    [deps.KomaMRIPlots.extensions]
+    [deps.KomaNYUPlots.extensions]
     KomaPlotsPlutoPlotlyExt = "PlutoPlotly"
 
 [[deps.LLVM]]

@@ -1,6 +1,6 @@
 # Run Distributed Simulations 
 
-While KomaMRI provides built-in support for CPU and GPU parallelization, it is sometimes desirable to distribute simulation work even further across multiple GPUs or compute nodes. This can be done by using Distributed.jl and making use of the independent spin property: each spin in the system is independent from the rest, so the phantom spins can be subdivided into separate simulations and results recombined, as in the diagram below:
+While KomaNYU provides built-in support for CPU and GPU parallelization, it is sometimes desirable to distribute simulation work even further across multiple GPUs or compute nodes. This can be done by using Distributed.jl and making use of the independent spin property: each spin in the system is independent from the rest, so the phantom spins can be subdivided into separate simulations and results recombined, as in the diagram below:
 
 ```@raw html
 <p align="center"><img width="90%" src="../../assets/KomamultiNode.svg"/></p>
@@ -44,7 +44,7 @@ addprocs(length(devices()))
 
 #Define inputs on each worker process
 @everywhere begin
-    using KomaMRI, CUDA
+    using KomaNYU, CUDA
     sys = Scanner()
     seq = PulseDesigner.EPI_example()
     obj = brain_phantom2D()
@@ -54,7 +54,7 @@ end
 
 #Distribute simulation across workers
 raw = Distributed.@distributed (+) for i=1:nworkers()
-    KomaMRICore.set_device!(i-1) #Sets device for this worker, note that CUDA devices are indexed from 0
+    KomaNYUCore.set_device!(i-1) #Sets device for this worker, note that CUDA devices are indexed from 0
     simulate(obj[parts[i]], seq, sys)
 end
 ```
@@ -96,7 +96,7 @@ addprocs(SlurmManager(parse(Int, ENV["SLURM_NTASKS"])))
 
 #Define inputs on each worker process
 @everywhere begin
-    using KomaMRI
+    using KomaNYU
     sys = Scanner()
     seq = PulseDesigner.EPI_example()
     obj = brain_phantom2D()

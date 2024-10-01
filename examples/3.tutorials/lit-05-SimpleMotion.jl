@@ -1,6 +1,6 @@
 # # Patient's Motion During Acquisition
 
-using KomaMRI # hide
+using KomaNYU # hide
 using PlotlyJS # hide
 sys = Scanner() # hide
 
@@ -29,7 +29,7 @@ p1 = plot_phantom_map(obj, :T2 ; height=450, time_samples=4) # hide
 #md # ```
 
 ## Read Sequence # hide
-seq_file1 = joinpath(dirname(pathof(KomaMRI)), "../examples/5.koma_paper/comparison_accuracy/sequences/EPI/epi_100x100_TE100_FOV230.seq") # hide
+seq_file1 = joinpath(dirname(pathof(KomaNYU)), "../examples/5.koma_paper/comparison_accuracy/sequences/EPI/epi_100x100_TE100_FOV230.seq") # hide
 seq1 = read_seq(seq_file1) # hide
 
 ## Simulate # hide

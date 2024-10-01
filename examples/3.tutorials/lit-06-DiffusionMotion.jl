@@ -1,6 +1,6 @@
 # # Diffusion-induced Signal Attenuation
 
-using KomaMRI # hide
+using KomaNYU # hide
 using PlotlyJS # hide
 using Random # hide
 
@@ -138,7 +138,7 @@ end
 # To simulate, we will broadcast the `simulate` function over the sequences and store the signals in a vector `Sb`.
 # The `Ref`'s are used to avoid broadcasting the `obj` and `sys` arguments (they will remain constant for all `seqs`).
 
-sim_params = KomaMRICore.default_sim_params()
+sim_params = KomaNYUCore.default_sim_params()
 sim_params["return_type"] = "mat"
 sim_params["Δt"] = Δt # Set max. grad. time step to fit diffusion time step
 

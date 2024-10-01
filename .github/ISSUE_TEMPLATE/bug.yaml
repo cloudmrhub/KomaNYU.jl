@@ -26,7 +26,7 @@ body:
           println("OS $(Base.Sys.MACHINE)")    # OS
           println("Julia $VERSION")            # Julia version
           # Koma sub-packages
-          for (_, pkg) in filter(((_, pkg),) -> occursin("KomaMRI", pkg.name), Pkg.dependencies())
+          for (_, pkg) in filter(((_, pkg),) -> occursin("KomaNYU", pkg.name), Pkg.dependencies())
             println("$(pkg.name) $(pkg.version)")
           end
         end
@@ -34,9 +34,9 @@ body:
       placeholder: |
         OS ...
         Julia X.X.X
-        KomaMRI X.X.X
-        KomaMRICore X.X.X
-        KomaMRIPlots X.X.X
+        KomaNYU X.X.X
+        KomaNYUCore X.X.X
+        KomaNYUPlots X.X.X
         ...
       render: Markdown
     validations:

@@ -62,11 +62,11 @@ format) used for reconstruction with MRIReco.
 
 # Examples
 ```julia-repl
-julia> seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/1.sequences/epi_se.seq")
+julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/1.sequences/epi_se.seq")
 
 julia> sys, obj, seq = Scanner(), brain_phantom2D(), read_seq(seq_file)
 
-julia> sim_params = KomaMRICore.default_sim_params(); sim_params["return_type"] = "mat"
+julia> sim_params = KomaNYUCore.default_sim_params(); sim_params["return_type"] = "mat"
 
 julia> signal = simulate(obj, seq, sys; sim_params)
 
@@ -111,7 +111,7 @@ function signal_to_raw_data(
     #XML header
     params = Dict(
         #AcquisitionSystemInformation
-        "systemVendor"                   => "KomaMRI.jl", #String
+        "systemVendor"                   => "KomaNYU.jl", #String
         "systemModel"                    => string(pkgversion(@__MODULE__)), #String
         "systemFieldStrength_T"          => sys.B0, #Float
         "institutionName"                => "Pontificia Universidad Catolica de Chile", #String

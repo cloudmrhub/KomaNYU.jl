@@ -245,9 +245,9 @@ using TestItems, TestItemRunner
     @testset "DiscreteSequence" begin
         path = joinpath(@__DIR__, "test_files")
         seq = PulseDesigner.EPI_example()
-        sampling_params = KomaMRIBase.default_sampling_params()
-        t, Δt = KomaMRIBase.get_variable_times(seq; Δt=sampling_params["Δt"], Δt_rf=sampling_params["Δt_rf"])
-        seqd = KomaMRIBase.discretize(seq)
+        sampling_params = KomaNYUBase.default_sampling_params()
+        t, Δt = KomaNYUBase.get_variable_times(seq; Δt=sampling_params["Δt"], Δt_rf=sampling_params["Δt_rf"])
+        seqd = KomaNYUBase.discretize(seq)
         i1, i2 = rand(1:Int(floor(0.5*length(seqd)))), rand(Int(ceil(0.5*length(seqd))):length(seqd))
         @test seqd[i1].t ≈ [t[i1]]
         @test seqd[i1:i2-1].t ≈ t[i1:i2]
@@ -256,11 +256,11 @@ using TestItems, TestItemRunner
         seq = RF(1.0e-6, 1.0)
         seq += Sequence([Grad(1.0e-3, 1.0)])
         seq += ADC(N, 1.0)
-        sampling_params = KomaMRIBase.default_sampling_params()
+        sampling_params = KomaNYUBase.default_sampling_params()
         sampling_params["Δt"], sampling_params["Δt_rf"] = T/N, T/N
-        seqd1 = KomaMRIBase.discretize(seq[1]; sampling_params)
-        seqd2 = KomaMRIBase.discretize(seq[2]; sampling_params)
-        seqd3 = KomaMRIBase.discretize(seq[3]; sampling_params)
+        seqd1 = KomaNYUBase.discretize(seq[1]; sampling_params)
+        seqd2 = KomaNYUBase.discretize(seq[2]; sampling_params)
+        seqd3 = KomaNYUBase.discretize(seq[3]; sampling_params)
         # Block 1
         @test is_RF_on(seq[1]) == is_RF_on(seqd1)
         @test is_GR_on(seq[1]) == is_GR_on(seqd1)
@@ -273,24 +273,24 @@ using TestItems, TestItemRunner
         @test is_RF_on(seq[3]) == is_RF_on(seqd3)
         @test is_GR_on(seq[3]) == is_GR_on(seqd3)
         @test is_ADC_on(seq[3]) == is_ADC_on(seqd3)
-        @test KomaMRIBase.is_GR_off(seqd) ==  !KomaMRIBase.is_GR_on(seqd)
-        @test KomaMRIBase.is_RF_off(seqd) ==  !KomaMRIBase.is_RF_on(seqd)
-        @test KomaMRIBase.is_ADC_off(seqd) == !KomaMRIBase.is_ADC_on(seqd)
+        @test KomaNYUBase.is_GR_off(seqd) ==  !KomaNYUBase.is_GR_on(seqd)
+        @test KomaNYUBase.is_RF_off(seqd) ==  !KomaNYUBase.is_RF_on(seqd)
+        @test KomaNYUBase.is_ADC_off(seqd) == !KomaNYUBase.is_ADC_on(seqd)
     end
 
     @testset "SequenceFunctions" begin
         path = joinpath(@__DIR__, "test_files")
         seq = PulseDesigner.EPI_example()
-        t, Δt = KomaMRIBase.get_variable_times(seq; Δt=1)
-        t_adc =  KomaMRIBase.get_adc_sampling_times(seq)
-        M2, M2_adc = KomaMRIBase.get_slew_rate(seq)
-        M2eddy, M2eddy_adc = KomaMRIBase.get_eddy_currents(seq)
-        Gx, Gy, Gz = KomaMRIBase.get_grads(seq, t)
-        Gmx, Gmy, Gmz = KomaMRIBase.get_grads(seq, reshape(t, 1, :))
+        t, Δt = KomaNYUBase.get_variable_times(seq; Δt=1)
+        t_adc =  KomaNYUBase.get_adc_sampling_times(seq)
+        M2, M2_adc = KomaNYUBase.get_slew_rate(seq)
+        M2eddy, M2eddy_adc = KomaNYUBase.get_eddy_currents(seq)
+        Gx, Gy, Gz = KomaNYUBase.get_grads(seq, t)
+        Gmx, Gmy, Gmz = KomaNYUBase.get_grads(seq, reshape(t, 1, :))
         @test reshape(Gmx, :, 1) ≈ Gx && reshape(Gmy, :, 1) ≈ Gy && reshape(Gmz, :, 1) ≈ Gz
         @test is_ADC_on(seq) == is_ADC_on(seq, t)
         @test is_RF_on(seq) == is_RF_on(seq, t)
-        @test KomaMRIBase.is_Delay(seq) == !(is_GR_on(seq) || is_RF_on(seq) || is_ADC_on(seq))
+        @test KomaNYUBase.is_Delay(seq) == !(is_GR_on(seq) || is_RF_on(seq) || is_ADC_on(seq))
         @test size(M2, 1) == length(Δt) && size(M2_adc, 1) == length(t_adc)
         @test size(M2eddy, 1) == length(Δt) && size(M2eddy_adc, 1) == length(t_adc)
 
@@ -341,7 +341,7 @@ end
         B1 = 23.4e-6 # For 90 deg flip angle
         Trf = 1e-3
         rf = PulseDesigner.RF_sinc(B1, Trf, sys; TBP=4)
-        @test round(KomaMRIBase.get_flip_angles(rf)[1]) ≈ 90
+        @test round(KomaNYUBase.get_flip_angles(rf)[1]) ≈ 90
     end
     @testset "Spiral" begin
         sys = Scanner()
@@ -629,22 +629,22 @@ end
     #Test brain phantom 2D
     ph = brain_phantom2D()
     @test ph.name == "brain2D_axial"
-    @test KomaMRIBase.get_dims(ph) == Bool[1, 1, 0]
+    @test KomaNYUBase.get_dims(ph) == Bool[1, 1, 0]
 
     #Test brain phantom 3D
     ph = brain_phantom3D()
     @test ph.name == "brain3D"
-    @test KomaMRIBase.get_dims(ph) == Bool[1, 1, 1]
+    @test KomaNYUBase.get_dims(ph) == Bool[1, 1, 1]
 
     #Test pelvis phantom 2D
     ph = pelvis_phantom2D()
     @test ph.name == "pelvis2D"
-    @test KomaMRIBase.get_dims(ph) == Bool[1, 1, 0]
+    @test KomaNYUBase.get_dims(ph) == Bool[1, 1, 0]
 
     #Test heart phantom
     ph = heart_phantom()
     @test ph.name == "LeftVentricle"
-    @test KomaMRIBase.get_dims(ph) == Bool[1, 1, 0]
+    @test KomaNYUBase.get_dims(ph) == Bool[1, 1, 0]
 end
 
 @testitem "Scanner" tags=[:base] begin
@@ -658,6 +658,6 @@ end
 @testitem "TrapezoidalIntegration" tags=[:base] begin
     dt = Float64[1 1 1 1]
     x  = Float64[0 1 2 1 0]
-    @test KomaMRIBase.trapz(dt, x)[1] ≈ 4 #Triangle area = bh/2, with b = 4 and h = 2
-    @test KomaMRIBase.cumtrapz(dt, x) ≈ [0.5 2 3.5 4]
+    @test KomaNYUBase.trapz(dt, x)[1] ≈ 4 #Triangle area = bh/2, with b = 4 and h = 2
+    @test KomaNYUBase.cumtrapz(dt, x) ≈ [0.5 2 3.5 4]
 end

@@ -1,11 +1,11 @@
-module KomaMRI
+module KomaNYU
 
 # IMPORT PACKAGES
 using Reexport
-@reexport using KomaMRICore
-@reexport using KomaMRIFiles
-@reexport using KomaMRIPlots
-import KomaMRICore: update_blink_window_progress!
+@reexport using KomaNYUCore
+@reexport using KomaNYUFiles
+@reexport using KomaNYUPlots
+import KomaNYUCore: update_blink_window_progress!
 
 # GUI
 using Blink, Interact, AssetRegistry

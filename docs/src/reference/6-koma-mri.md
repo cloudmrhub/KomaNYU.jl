@@ -1,7 +1,7 @@
-# KomaMRI
+# KomaNYU
 
 ```@meta
-CurrentModule = KomaMRI
+CurrentModule = KomaNYU
 ```
 
 ## User Interface

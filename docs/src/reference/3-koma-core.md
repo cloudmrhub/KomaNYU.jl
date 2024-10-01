@@ -1,7 +1,7 @@
-# KomaMRICore
+# KomaNYUCore
 
 ```@meta
-CurrentModule = KomaMRICore
+CurrentModule = KomaNYUCore
 ```
 
 ## Simulation functions

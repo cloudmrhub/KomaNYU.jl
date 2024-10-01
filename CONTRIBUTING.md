@@ -1,19 +1,19 @@
 # Contributing Guidelines
 
-Thanks for taking the time to contribute to KomaMRI! ❤️
+Thanks for taking the time to contribute to KomaNYU! ❤️
 
 We appreciate your interest in improving this project. Before you start contributing, please take a moment to review the following guidelines.
 
 
 ## Reporting Issues
 
-First off, we assume that you have read the available [Documentation](https://cncastillo.github.io/KomaMRI.jl).
+First off, we assume that you have read the available [Documentation](https://cncastillo.github.io/KomaNYU.jl).
 
-Before you report an issue, it is best to search for existing [Issues](https://github.com/cncastillo/KomaMRI.jl/issues) that might help you. In case you have found a suitable issue and still need clarification, you can write your question in this issue.
+Before you report an issue, it is best to search for existing [Issues](https://github.com/cncastillo/KomaNYU.jl/issues) that might help you. In case you have found a suitable issue and still need clarification, you can write your question in this issue.
 
 If you then still feel the need to report an issue, we recommend the following:
 
-- Open an [Issue](https://github.com/cncastillo/KomaMRI.jl/issues/new).
+- Open an [Issue](https://github.com/cncastillo/KomaNYU.jl/issues/new).
 - Provide as much context as you can about what you're running into.
 - Provide project and platform versions, depending on what seems relevant.
 
@@ -22,12 +22,12 @@ We will then take care of the issue as soon as possible.
 
 ## How to Contribute
 
-1. **Fork KomaMRI Repository**: Fork the [KomaMRI.jl repository](https://github.com/cncastillo/KomaMRI.jl) to your GitHub account to create a personal copy.
+1. **Fork KomaNYU Repository**: Fork the [KomaNYU.jl repository](https://github.com/cncastillo/KomaNYU.jl) to your GitHub account to create a personal copy.
 
 2. **Clone Fork to Local Machine**: Clone your fork of the repository to your local machine using the following Git command:
 
    ```bash
-   git clone git@github.com:<your-username>/KomaMRI.jl.git
+   git clone git@github.com:<your-username>/KomaNYU.jl.git
    ```
 
 3. **Create Contribution Branch**: Create a new branch dedicated to your contribution within the cloned repository.
@@ -52,13 +52,13 @@ We will then take care of the issue as soon as possible.
    git push origin feature/your-feature
    ```
 
-8. **Initiate Pull Request (PR)**: Propose your changes by creating a pull request against the `master` branch of the KomaMRI repository. Provide a clear title and a detailed description of your modifications. Ensure that your pull request is linked to an issue by including its #ID in the description.
+8. **Initiate Pull Request (PR)**: Propose your changes by creating a pull request against the `master` branch of the KomaNYU repository. Provide a clear title and a detailed description of your modifications. Ensure that your pull request is linked to an issue by including its #ID in the description.
 
 9. **Undergo Code Review**: Subject your code to review by maintainers, who will provide feedback and may request further adjustments before merging.
 
 
 ## License
 
-By contributing to KomaMRI, you agree that your contributions will be licensed under the [MIT License](https://github.com/cncastillo/KomaMRI.jl/blob/master/LICENSE).
+By contributing to KomaNYU, you agree that your contributions will be licensed under the [MIT License](https://github.com/cncastillo/KomaNYU.jl/blob/master/LICENSE).
 
-Thank you for contributing to KomaMRI! 🌟
+Thank you for contributing to KomaNYU! 🌟

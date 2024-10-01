@@ -2,17 +2,17 @@ using TestItems, TestItemRunner
 
 @run_package_tests filter=ti->!(:skipci in ti.tags)&&(:koma in ti.tags) #verbose=true
 
-# include("../KomaMRICore/test/runtests.jl")
-# include("../KomaMRIPlots/test/runtests.jl")
+# include("../KomaNYUCore/test/runtests.jl")
+# include("../KomaNYUPlots/test/runtests.jl")
 
 @testitem "MRIReco recon" tags=[:koma] begin
     #Sanity check 1
     A = rand(5,5,3)
-    B = KomaMRI.fftc(KomaMRI.ifftc(A))
+    B = KomaNYU.fftc(KomaNYU.ifftc(A))
     @test A ≈ B
     
     #Sanity check 2
-    B = KomaMRI.ifftc(KomaMRI.fftc(A))
+    B = KomaNYU.ifftc(KomaNYU.fftc(A))
     @test A ≈ B
 
     #MRIReco.jl

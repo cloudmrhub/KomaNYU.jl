@@ -6,18 +6,18 @@ const PLOT_BACKEND = Ref{String}("PlotlyJS")
 function plot_backend!(backend::String)
     if backend == PLOT_BACKEND[]
         @info """
-        KomaMRIPlots backend is already set to: $backend.
+        KomaNYUPlots backend is already set to: $backend.
         No need to do anything else.
         """
         return
     end
     backend in PLOT_BACKENDS || throw(ArgumentError("""
-    Unsupported KomaMRIPlots backend: $backend.
+    Unsupported KomaNYUPlots backend: $backend.
     Supported backends are: $PLOT_BACKENDS.
     """))
     PLOT_BACKEND[] = backend
     @info """
-    New KomaMRIPlots backend set: $backend.
+    New KomaNYUPlots backend set: $backend.
     """
 end
 
@@ -29,7 +29,7 @@ function plot_koma(args...; kwargs...)
         plot_koma(KomaPlutoPlotlyBackend(), args...; kwargs...)
     else
         error("""
-        Unsupported KomaMRIPlots backend: $PLOT_BACKEND.
+        Unsupported KomaNYUPlots backend: $PLOT_BACKEND.
         Supported backends are: $PLOT_BACKENDS.
         """)
     end

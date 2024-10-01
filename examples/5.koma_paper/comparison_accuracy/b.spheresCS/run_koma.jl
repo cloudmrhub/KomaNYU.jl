@@ -1,4 +1,4 @@
-using KomaMRI, Suppressor, MAT
+using KomaNYU, Suppressor, MAT
 
 obj = @suppress read_phantom_jemris("../../../2.phantoms/sphere_chemical_shift.h5")
 seq = @suppress read_seq("../sequences/EPI/epi_100x100_TE100_FOV230.seq")

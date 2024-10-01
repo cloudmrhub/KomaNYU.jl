@@ -1,6 +1,6 @@
 # # Slice-Selective Acquisition of 3D Phantom
 
-using KomaMRI # hide
+using KomaNYU # hide
 sys = Scanner() # hide
 
 # While in the previous examples we simulated using hard RF pulses,
@@ -22,7 +22,7 @@ p1 = plot_phantom_map(obj, :T2 ; height=400)
 # 3 slices in the longitudinal axis. Note that the sequence
 # contains three EPIs to acquire 3 slices of the phantom.
 
-seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/1.sequences/epi_multislice.seq")
+seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/1.sequences/epi_multislice.seq")
 seq = read_seq(seq_file)
 p2 = plot_seq(seq; range=[0,10], height=400)
 #md savefig(p2, "../assets/3-seq.html") # hide

@@ -1,8 +1,8 @@
 # # Free Induction Decay
 
-# First of all, let's use the KomaMRI package and define the default scanner.
+# First of all, let's use the KomaNYU package and define the default scanner.
 
-using KomaMRI
+using KomaNYU
 sys = Scanner() # default hardware definition
 
 # The free induction decay is the simplest observable NMR signal.

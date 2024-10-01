@@ -1,4 +1,4 @@
-using KomaMRI, PlotlyJS
+using KomaNYU, PlotlyJS
 # RF Pulse Paramters, https://onlinelibrary.wiley.com/doi/epdf/10.1002/jmri.26021?saml_referrer
 b1max = 13e-6      #Peak amplitude (uT)
 Trf = 18.3e-3      #Pulse duration (ms)
@@ -23,7 +23,7 @@ seq = Sequence(
     [RF(B1,Trf,Δf,0);;]
     )
 p1 = plot_seq(seq; max_rf_samples=Inf, slider=false)
-KomaMRI.get_flip_angles(seq)[1]
+KomaNYU.get_flip_angles(seq)[1]
 # Simulation
 sim_params = Dict{String,Any}("Δt_rf"=>t[2]-t[1])
 z = range(-1, 1, 400)

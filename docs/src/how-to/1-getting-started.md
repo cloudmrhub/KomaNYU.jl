@@ -2,21 +2,21 @@
 
 ## Installing Julia
 
-**KomaMRI** was written in Julia, so the first thing you should do is to install it! The latest version of Julia can be downloaded at the [Julia Downloads](https://julialang.org/downloads/) page. It is advisable you add julia to the PATH, which can be done during the installation process.
+**KomaNYU** was written in Julia, so the first thing you should do is to install it! The latest version of Julia can be downloaded at the [Julia Downloads](https://julialang.org/downloads/) page. It is advisable you add julia to the PATH, which can be done during the installation process.
 
-## Installing KomaMRI
+## Installing KomaNYU
 
-Once Julia is installed, open the Julia REPL, and add the **KomaMRI** package by typing the following commands:
+Once Julia is installed, open the Julia REPL, and add the **KomaNYU** package by typing the following commands:
 
 * Press the `]` key and then press `enter` to bring up **Julia**'s package manager.
-* Type `add KomaMRI` and then press `enter` in the package manager session.
+* Type `add KomaNYU` and then press `enter` in the package manager session.
 
 This process should take about 5 minutes in a fresh Julia installation. Here is how it looks in the **Julia REPL**:
 
 ```julia-repl
 julia> ]
 
-(@v1.9) pkg> add KomaMRI
+(@v1.9) pkg> add KomaNYU
 ```
 Then press `Ctrl+C` or `backspace` to return to the `julia>` prompt.
 
@@ -24,10 +24,10 @@ Then press `Ctrl+C` or `backspace` to return to the `julia>` prompt.
 ---
 ## My First MRI Simulation
 
-For our first simulation we will use **KomaMRI**'s graphical user interface (GUI). For this, you will first need to load **KomaMRI** by typing `using KomaMRI`, and then launch the GUI with the [`KomaUI`](@ref) function. Note that if you want to run simulations on the GPU (for example, using CUDA), then `using CUDA` is also necessary (see [GPU Parallelization](../explanation/4-gpu-explanation.md)).  
+For our first simulation we will use **KomaNYU**'s graphical user interface (GUI). For this, you will first need to load **KomaNYU** by typing `using KomaNYU`, and then launch the GUI with the [`KomaUI`](@ref) function. Note that if you want to run simulations on the GPU (for example, using CUDA), then `using CUDA` is also necessary (see [GPU Parallelization](../explanation/4-gpu-explanation.md)).  
 
 ```julia-repl
-julia> using KomaMRI, CUDA
+julia> using KomaNYU, CUDA
 
 julia> KomaUI()
 ```

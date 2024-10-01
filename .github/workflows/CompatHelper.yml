@@ -10,6 +10,6 @@ jobs:
       - name: Pkg.add("CompatHelper")
         run: julia -e 'using Pkg; Pkg.add("CompatHelper")'
       - name: CompatHelper.main()
-        run: julia -e 'using CompatHelper; CompatHelper.main(; subdirs=["", "KomaMRIBase", "KomaMRICore", "KomaMRIFiles", "KomaMRIPlots"])'
+        run: julia -e 'using CompatHelper; CompatHelper.main(; subdirs=["", "KomaNYUBase", "KomaNYUCore", "KomaNYUFiles", "KomaNYUPlots"])'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

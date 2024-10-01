@@ -9,9 +9,9 @@ function read_phantom(filename::String)
     Ns = read_attribute(fid, "Ns")
     # Version
     file_version = VersionNumber(read_attribute(fid, "Version"))
-    program_version = pkgversion(KomaMRIFiles)
+    program_version = pkgversion(KomaNYUFiles)
     if file_version.major != program_version.major
-        @warn "KomaMRIFiles: Version mismatch detected: $file_version (used to write .phantom) vs $program_version (installed)
+        @warn "KomaNYUFiles: Version mismatch detected: $file_version (used to write .phantom) vs $program_version (installed)
          This may lead to compatibility issues. "
     end
     phantom_fields = []
@@ -58,17 +58,17 @@ function import_motion_field!(motion_fields::Array, motion::HDF5.Group, name::St
     get_subtype_strings(t::Type) = last.(split.(string.(get_subtypes(t::Type)), "."))
     
     subtype_strings = reduce(vcat, get_subtype_strings.([
-        KomaMRIBase.SimpleAction,
-        KomaMRIBase.ArbitraryAction,
-        KomaMRIBase.AbstractTimeSpan,
-        KomaMRIBase.AbstractSpinSpan
+        KomaNYUBase.SimpleAction,
+        KomaNYUBase.ArbitraryAction,
+        KomaNYUBase.AbstractTimeSpan,
+        KomaNYUBase.AbstractSpinSpan
     ]))
 
     subtype_vector = reduce(vcat, get_subtypes.([
-        KomaMRIBase.SimpleAction,
-        KomaMRIBase.ArbitraryAction,
-        KomaMRIBase.AbstractTimeSpan,
-        KomaMRIBase.AbstractSpinSpan
+        KomaNYUBase.SimpleAction,
+        KomaNYUBase.ArbitraryAction,
+        KomaNYUBase.AbstractTimeSpan,
+        KomaNYUBase.AbstractSpinSpan
     ]))
 
     motion_subfields = []
@@ -111,10 +111,10 @@ function write_phantom(
     # Create HDF5 phantom file
     fid = h5open(filename, "w")
     # Root attributes
-    HDF5.attributes(fid)["Version"] = string(pkgversion(KomaMRIFiles))
+    HDF5.attributes(fid)["Version"] = string(pkgversion(KomaNYUFiles))
     HDF5.attributes(fid)["Name"] = obj.name
     HDF5.attributes(fid)["Ns"] = length(obj.x)
-    dims = KomaMRIBase.get_dims(obj)
+    dims = KomaNYUBase.get_dims(obj)
     HDF5.attributes(fid)["Dims"] = sum(dims)
     # Positions
     pos = create_group(fid, "position")
@@ -135,7 +135,7 @@ function write_phantom(
 end
 
 function export_motion!(motion_group::HDF5.Group, motion_list::MotionList)
-    KomaMRIBase.sort_motions!(motion_list)
+    KomaNYUBase.sort_motions!(motion_list)
     for (counter, m) in enumerate(motion_list.motions)
         motion = create_group(motion_group, "motion_$(counter)")
         for key in fieldnames(Motion) # action, time, spins

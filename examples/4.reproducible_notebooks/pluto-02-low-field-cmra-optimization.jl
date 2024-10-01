@@ -23,7 +23,7 @@ begin
 		  println("OS $(Base.Sys.MACHINE)")    # OS
 		  println("Julia $VERSION")            # Julia version
 		  # Koma sub-packages
-		  for (_, pkg) in filter(((_, pkg),) -> occursin("KomaMRI", pkg.name), Pkg.dependencies())
+		  for (_, pkg) in filter(((_, pkg),) -> occursin("KomaNYU", pkg.name), Pkg.dependencies())
 		    println("$(pkg.name) $(pkg.version)")
 		  end
 		end
@@ -31,7 +31,7 @@ begin
 end
 
 # ╔═╡ 0b7a405e-bbb5-11ee-05ca-4b1c8567398d
-using KomaMRICore, KomaMRIPlots, PlutoPlotly # Essentials
+using KomaNYUCore, KomaNYUPlots, PlutoPlotly # Essentials
 
 # ╔═╡ 70dbc2bd-8b93-471d-8340-04d98a008ca6
 using Suppressor, PlutoUI, ProgressLogging # Extras
@@ -60,7 +60,7 @@ md"# 1. Simulation setup"
 md"## 1.1. Loading required packages"
 
 # ╔═╡ f49655cc-460e-4981-92ea-dfd6147308bf
-md"Bloch simulations were performed using **KomaMRI.jl** to optimize the proposed whole-heart CMRA parameters."
+md"Bloch simulations were performed using **KomaNYU.jl** to optimize the proposed whole-heart CMRA parameters."
 
 # ╔═╡ 77153e5c-71bd-42e3-bae9-e4811ffa7a3d
 md"""## 1.2. Scanner
@@ -385,7 +385,7 @@ begin
     labs = ["Myocardium", "Blood", "Fat"]
 	cols = ["blue", "red", "green"]
     spin_group = [(1:Niso)', (Niso+1:2Niso)', (2Niso+1:3Niso)']
-    t = KomaMRICore.get_adc_sampling_times(seq)
+    t = KomaNYUCore.get_adc_sampling_times(seq)
     Mxy(i) = abs.(sum(magnetization[:,spin_group[i],1,1][:,1,:],dims=2)[:]/length(spin_group[i]))
     Mz(i) = real.(sum(magnetization[:,spin_group[i],2,1][:,1,:],dims=2)[:]/length(spin_group[i]))
 
@@ -694,7 +694,7 @@ end
 
 # ╔═╡ 3d7e7d20-a77a-48b3-ad2e-6b621227be16
 md"""# References
- - **Castillo-Passi C**, Coronado R, Varela-Mattatall G, Alberola-López C, Botnar R, Irarrazaval P. KomaMRI.jl: An open-source framework for general MRI simulations with GPU acceleration. Magnetic Resonance in Medicine. 2023;90(1):329-342. [doi:10.1002/mrm.29635](doi:10.1002/mrm.29635)
+ - **Castillo-Passi C**, Coronado R, Varela-Mattatall G, Alberola-López C, Botnar R, Irarrazaval P. KomaNYU.jl: An open-source framework for general MRI simulations with GPU acceleration. Magnetic Resonance in Medicine. 2023;90(1):329-342. [doi:10.1002/mrm.29635](doi:10.1002/mrm.29635)
  - **Campbell-Washburn AE**, Ramasawmy R, Restivo MC, et al. Opportunities in Interventional and Diagnostic Imaging by Using High-Performance Low-Field-Strength MRI. Radiology. 2019;293(2):384-393. [doi:10.1148/radiol.2019190452](doi:10.1148/radiol.2019190452)
 - **Restivo MC**, Ramasawmy R, Bandettini WP, Herzka DA, Campbell-Washburn AE. Efficient spiral in-out and EPI balanced steady-state free precession cine imaging using a high-performance 0.55T MRI. Magnetic Resonance in Medicine. 2020;84(5):2364-2375. [doi:10.1002/mrm.28278](doi:10.1002/mrm.28278)
 """
@@ -707,8 +707,8 @@ This [Pluto notebook](https://plutojl.org/) is reproducible by default, as it ha
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
-KomaMRICore = "4baa4f4d-2ae9-40db-8331-a7d1080e3f4e"
-KomaMRIPlots = "76db0263-63f3-4d26-bb9a-5dba378db904"
+KomaNYUCore = "4baa4f4d-2ae9-40db-8331-a7d1080e3f4e"
+KomaNYUPlots = "76db0263-63f3-4d26-bb9a-5dba378db904"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 PlutoPlotly = "8e989ff0-3d88-8e9f-f020-2b208a939ff0"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
@@ -716,8 +716,8 @@ ProgressLogging = "33c8b6b6-d38a-422a-b730-caa89a2f386c"
 Suppressor = "fd094767-a336-5f1f-9728-57cf17d0bbfb"
 
 [compat]
-KomaMRICore = "~0.8.3"
-KomaMRIPlots = "~0.8.3"
+KomaNYUCore = "~0.8.3"
+KomaNYUPlots = "~0.8.3"
 PlutoPlotly = "~0.4.6"
 PlutoUI = "~0.7.58"
 ProgressLogging = "~0.1.4"
@@ -1280,26 +1280,26 @@ version = "0.9.21"
     [deps.KernelAbstractions.weakdeps]
     EnzymeCore = "f151be2c-9106-41f4-ab19-57ee4f262869"
 
-[[deps.KomaMRIBase]]
+[[deps.KomaNYUBase]]
 deps = ["Interpolations", "MAT", "MRIBase", "Parameters", "Pkg", "Reexport"]
 git-tree-sha1 = "92a26a7b80bda498639ab7f813a02ee8f2bd4629"
 uuid = "d0bc0b20-b151-4d03-b2a4-6ca51751cb9c"
 version = "0.8.4"
 
-[[deps.KomaMRICore]]
-deps = ["Adapt", "CUDA", "Functors", "KomaMRIBase", "Pkg", "ProgressMeter", "Reexport", "ThreadsX"]
+[[deps.KomaNYUCore]]
+deps = ["Adapt", "CUDA", "Functors", "KomaNYUBase", "Pkg", "ProgressMeter", "Reexport", "ThreadsX"]
 git-tree-sha1 = "e01a73c2314206995c8a0d9e750fc545904d57a4"
 uuid = "4baa4f4d-2ae9-40db-8331-a7d1080e3f4e"
 version = "0.8.3"
 
-[[deps.KomaMRIPlots]]
-deps = ["Interpolations", "Kaleido_jll", "KomaMRIBase", "MAT", "Pkg", "PlotlyJS", "Reexport"]
+[[deps.KomaNYUPlots]]
+deps = ["Interpolations", "Kaleido_jll", "KomaNYUBase", "MAT", "Pkg", "PlotlyJS", "Reexport"]
 git-tree-sha1 = "4777e9582c4cf39772abd8538ebca30eb564d03c"
 uuid = "76db0263-63f3-4d26-bb9a-5dba378db904"
 version = "0.8.3"
 weakdeps = ["PlutoPlotly"]
 
-    [deps.KomaMRIPlots.extensions]
+    [deps.KomaNYUPlots.extensions]
     KomaPlotsPlutoPlotlyExt = "PlutoPlotly"
 
 [[deps.LLVM]]

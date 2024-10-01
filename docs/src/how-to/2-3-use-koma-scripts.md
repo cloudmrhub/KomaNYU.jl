@@ -1,13 +1,13 @@
 # Use Koma in Julia Scripts
 
-You should already be familiar with the  [Graphical User Interface](2-1-use-koma-ui.md) of **KomaMRI**. However, you can also use this package directly from the **Julia REPL** or write your own Julia scripts. This allows you to unlock the full potential of KomaMRI, enabling you to utilize more of its functionalities and even test your own MRI ideas.
+You should already be familiar with the  [Graphical User Interface](2-1-use-koma-ui.md) of **KomaNYU**. However, you can also use this package directly from the **Julia REPL** or write your own Julia scripts. This allows you to unlock the full potential of KomaNYU, enabling you to utilize more of its functionalities and even test your own MRI ideas.
 
-This section demonstrates a basic workflow with **KomaMRI** through writing your own scripts or entering commands directly into the **Julia REPL**. Let's begin.
+This section demonstrates a basic workflow with **KomaNYU** through writing your own scripts or entering commands directly into the **Julia REPL**. Let's begin.
 
 ## Basic Workflow
 (You can also go to [analog steps using UI](2-1-use-koma-ui.md#Basic-Workflow))
 
-As a general overview, remember the following workflow steps when using KomaMRI:
+As a general overview, remember the following workflow steps when using KomaNYU:
 
 * Loading Simulation Inputs: **Scanner**, **Phantom**, **Sequence**
 * Running Simulation
@@ -16,7 +16,7 @@ As a general overview, remember the following workflow steps when using KomaMRI:
 Let's replicate these previous steps in a **Julia** script. You will obtain the following code, which you can copy and paste into the **Julia REPL**:
 ```julia
 # Import the package
-using KomaMRI
+using KomaNYU
 
 # Define scanner, object and sequence
 sys = Scanner()
@@ -24,7 +24,7 @@ obj = brain_phantom2D()
 seq = PulseDesigner.EPI_example()
 
 # Define simulation parameters and perform simulation
-sim_params = KomaMRICore.default_sim_params() 
+sim_params = KomaNYUCore.default_sim_params() 
 raw = simulate(obj, seq, sys; sim_params)
 
 # Auxiliary function for reconstruction
@@ -81,7 +81,7 @@ Scanner
 
 ### Phantom
 
-The Phantom struct created in this example represents a slice of a brain. To create it, we use the function `brain_phantom2D`, which is part of the subdependency **KomaMRICore**. While **KomaMRI** provides some phantom examples for experimentation, you may also want to create your custom **Phantom** struct tailored to your specific requirements.
+The Phantom struct created in this example represents a slice of a brain. To create it, we use the function `brain_phantom2D`, which is part of the subdependency **KomaNYUCore**. While **KomaNYU** provides some phantom examples for experimentation, you may also want to create your custom **Phantom** struct tailored to your specific requirements.
 
 The **Phantom** struct contains MRI parameters related to the magnetization properties of an object. These parameters include magnetization positions, proton density, relaxation times, off-resonance, among others. To view all the keys and values of the object, you can do so in the **Julia REPL** as follows:
 ```julia-repl
@@ -103,7 +103,7 @@ Phantom{Float64}
 ```
 As you can see, attributes of the **Phantom** struct are vectors representing object properties, with each element holding a value associated with a single magnetization.
 
-You can also visualize the **Phantom** struct using the [`plot_phantom_map`](@ref) function, which is part of the **KomaMRIPlots** subdependency. This function plots the magnitude of a property for each magnetization at a specific spatial position. You can observe properties such as proton density and relaxation times, so feel free to replace the `:ρ` symbol with another property of the phantom in the example below:
+You can also visualize the **Phantom** struct using the [`plot_phantom_map`](@ref) function, which is part of the **KomaNYUPlots** subdependency. This function plots the magnitude of a property for each magnetization at a specific spatial position. You can observe properties such as proton density and relaxation times, so feel free to replace the `:ρ` symbol with another property of the phantom in the example below:
 ```julia-repl
 julia> plot_phantom_map(obj, :ρ)
 ```
@@ -111,9 +111,9 @@ julia> plot_phantom_map(obj, :ρ)
 <object type="text/html" data="../../assets/phantom-rho.html" style="width:100%; height:620px;"></object>
 ```
 
-To utilize test phantoms included with **KomaMRI**, navigate to the "examples" folder and use the [`read_phantom_jemris`](@ref)  function to read a phantom in `.h5` format. The following steps outline how to do this in **Julia**:
+To utilize test phantoms included with **KomaNYU**, navigate to the "examples" folder and use the [`read_phantom_jemris`](@ref)  function to read a phantom in `.h5` format. The following steps outline how to do this in **Julia**:
 ```julia-repl
-julia> path_koma = dirname(dirname(pathof(KomaMRI)))
+julia> path_koma = dirname(dirname(pathof(KomaNYU)))
 julia> path_sphere = joinpath(path_koma, "examples", "2.phantoms", "sphere_chemical_shift.h5")
 julia> sphere = read_phantom_jemris(path_sphere)
 julia> plot_phantom_map(sphere, :T2)
@@ -124,7 +124,7 @@ julia> plot_phantom_map(sphere, :T2)
 
 ### Sequence
 
-The **Sequence** struct in the example represents one of the most basic MRI sequences. It excites the object with a 90° RF pulse and then uses EPI gradients to fill the k-space in a "square" manner. While you may want to create your sequences for experiments, you can always use some of the examples already available in **KomaMRI**.
+The **Sequence** struct in the example represents one of the most basic MRI sequences. It excites the object with a 90° RF pulse and then uses EPI gradients to fill the k-space in a "square" manner. While you may want to create your sequences for experiments, you can always use some of the examples already available in **KomaNYU**.
 
 In MRI, the sequence must be carefully designed with precise timing to obtain an image. It includes subcomponents such as gradients, radio-frequency excitation signals, and sample acquisition. For more information on constructing a **Sequence** struct, refer to the [Sequence](../explanation/1-sequence.md) section.
 
@@ -150,11 +150,11 @@ julia> plot_kspace(seq)
 <object type="text/html" data="../../assets/kspace-epi.html" style="width:100%; height:420px;"></object>
 ```
 
-Additionally, there are helpful sequence construction functions within a submodule of **KomaMRI** called **PulseDesigner**. These functions include [`PulseDesigner.RF_hard`](@ref), [`PulseDesigner.RF_sinc`](@ref), [`PulseDesigner.EPI`](@ref), [`PulseDesigner.radial_base`](@ref) and [`PulseDesigner.spiral_base`](@ref). For more details on how to use them, refer to the [API documentation](../reference/1-api.md).
+Additionally, there are helpful sequence construction functions within a submodule of **KomaNYU** called **PulseDesigner**. These functions include [`PulseDesigner.RF_hard`](@ref), [`PulseDesigner.RF_sinc`](@ref), [`PulseDesigner.EPI`](@ref), [`PulseDesigner.radial_base`](@ref) and [`PulseDesigner.spiral_base`](@ref). For more details on how to use them, refer to the [API documentation](../reference/1-api.md).
 
-**KomaMRI** is also compatible with [Pulseq](https://pulseq.github.io/). The package installation includes some `.seq` files in **Pulseq** format, which can be read and used as a **Sequence** struct. Here's how to read a spiral **Pulseq** file stored in the "examples" folder of **KomaMRI**:
+**KomaNYU** is also compatible with [Pulseq](https://pulseq.github.io/). The package installation includes some `.seq` files in **Pulseq** format, which can be read and used as a **Sequence** struct. Here's how to read a spiral **Pulseq** file stored in the "examples" folder of **KomaNYU**:
 ```julia-repl
-julia> path_koma = dirname(dirname(pathof(KomaMRI)))
+julia> path_koma = dirname(dirname(pathof(KomaNYU)))
 julia> path_spiral = joinpath(path_koma, "examples", "1.sequences", "spiral.seq")
 julia> spiral = read_seq(path_spiral)
 julia> plot_seq(spiral)
@@ -170,13 +170,13 @@ julia> plot_kspace(spiral)
 The following lines in the example script configure and perform the simulation:
 ```julia
 # Define simulation parameters and perform simulation
-sim_params = KomaMRICore.default_sim_params() 
+sim_params = KomaNYUCore.default_sim_params() 
 raw = simulate(obj, seq, sys; sim_params)
 ```
 
 ### Simulation Parameters
 
-To perform simulations, **KomaMRI** requires certain parameters. You can use the default parameters for testing, but you also have the option to customize specific simulation aspects. In the example, we use the [`KomaMRICore.default_sim_params`](@ref) function to create a dictionary with default simulation parameters. You can view the keys that can be modified by displaying the `sim_params` variable:
+To perform simulations, **KomaNYU** requires certain parameters. You can use the default parameters for testing, but you also have the option to customize specific simulation aspects. In the example, we use the [`KomaNYUCore.default_sim_params`](@ref) function to create a dictionary with default simulation parameters. You can view the keys that can be modified by displaying the `sim_params` variable:
 ```julia-repl
 julia> sim_params
 Dict{String, Any} with 9 entries:
@@ -219,7 +219,7 @@ julia> plot_signal(raw)
 ## Reconstructing Image using MRIReco
 (You can also go to [analog steps using UI](2-1-use-koma-ui.md#Reconstructing-Image-using-MRIReco))
 
-**KomaMRI** does not handle reconstruction; instead, you should utilize the **MRIReco** package to generate an image. For convenience, when you install **KomaMRI**, you also install **MRIReco**, allowing you to access functions from that package. You should pay special attention to the `RawAcquisitionData` and `AcquisitionData` structs, as well as the `reconstruction` function.
+**KomaNYU** does not handle reconstruction; instead, you should utilize the **MRIReco** package to generate an image. For convenience, when you install **KomaNYU**, you also install **MRIReco**, allowing you to access functions from that package. You should pay special attention to the `RawAcquisitionData` and `AcquisitionData` structs, as well as the `reconstruction` function.
 
 In the example below, we define an auxiliary function, `reconstruct_2d_image`, which takes a raw signal struct, `RawAcquisitionData`, as input and returns a 2D Array representing an image. Within this function, we create an `AcquisitionData` struct and set some reconstruction parameters, which serve as inputs for the `reconstruction` function. The latter function is responsible for the image generation process.
 ```julia
@@ -245,7 +245,7 @@ image = reconstruct_2d_image(raw)
 
 If you need more information about how to use the `AcquisitionData` and the how to fill the reconstruction parameters, you need to visit the [MRIReco webpage](https://github.com/MagneticResonanceImaging/MRIReco.jl)).
 
-To display the image, you can use the [`plot_image`](@ref) function which is part of the **KomaMRIPlots** subpackage:
+To display the image, you can use the [`plot_image`](@ref) function which is part of the **KomaNYUPlots** subpackage:
 ```julia-repl
 julia> plot_image(image)
 ```
@@ -257,9 +257,9 @@ julia> plot_image(image)
 ## Exporting Results to .mat File
 (You can also go to [analog steps using UI](2-1-use-koma-ui.md#Exporting-Results-to-.mat-File))
 
-Many people in the MRI community uses MATLAB, probably you are one of them and you want to process the raw signal in the MATLAB environment after simulation is done with **KomaMRI**. Here we show you an example of how to save a `.mat` file with the information of the raw signal thank to the help of the **MAT** package:
+Many people in the MRI community uses MATLAB, probably you are one of them and you want to process the raw signal in the MATLAB environment after simulation is done with **KomaNYU**. Here we show you an example of how to save a `.mat` file with the information of the raw signal thank to the help of the **MAT** package:
 
-Many people in the MRI community use **MATLAB**; you might be one of them and may want to process the **Raw Signal** in the **MATLAB** environment after simulation is completed with **KomaMRI**. Here, we provide an example of how to save a `.mat` file containing the  **Raw Signal** information using the **MAT** package.
+Many people in the MRI community use **MATLAB**; you might be one of them and may want to process the **Raw Signal** in the **MATLAB** environment after simulation is completed with **KomaNYU**. Here, we provide an example of how to save a `.mat` file containing the  **Raw Signal** information using the **MAT** package.
 ```julia
 # Use the MAT package
 using MAT

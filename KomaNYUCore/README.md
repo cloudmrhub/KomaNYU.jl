@@ -1,1 +1,1 @@
-# KomaMRICore
+# KomaNYUCore

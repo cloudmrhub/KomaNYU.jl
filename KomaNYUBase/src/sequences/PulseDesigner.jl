@@ -4,7 +4,7 @@
 A module to define different pulse sequences.
 """
 module PulseDesigner
-using ..KomaMRIBase
+using ..KomaNYUBase
 
 """
     seq = RF_hard(B1, T, sys; G=[0, 0, 0], Δf=0)

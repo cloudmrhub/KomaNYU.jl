@@ -22,7 +22,7 @@ returns CPU(), else, returns the GPU backend (currently either CUDABackend(), Me
 ROCBackend(), or oneAPIBackend()).
 
 The GPU package for the corresponding backend (CUDA.jl, Metal.jl, AMDGPU.jl, or oneAPI.jl) must be
-loaded and functional, otherwise KomaMRI will default to using the CPU.
+loaded and functional, otherwise KomaNYU will default to using the CPU.
 
 # Arguments
 - 'use_gpu': ('::Bool') If true, attempt to use GPU and check for available backends
@@ -73,7 +73,7 @@ function get_backend(use_gpu::Bool)
     else
         # Will probably never get here
         @info """
-          Multiple functional backends have been loaded and KomaMRI does not 
+          Multiple functional backends have been loaded and KomaNYU does not 
           know which one to use. Ensure that your code contains only one 'using' 
           statement for the GPU backend you wish to use. Defaulting back to the 
           CPU. (No action is required if you want to run on the CPU).

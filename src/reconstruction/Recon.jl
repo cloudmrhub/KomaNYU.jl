@@ -34,10 +34,10 @@ fftc(x;dims=[1,2]) =fftshift(fft(ifftshift(x,dims),dims),dims)/prod(size(x)[dims
 # 		if recon == "MRIReco"
 # 			#MRIReco.jl, WIP
 # 			#Getting kspace coordinates
-# 			times = KomaMRI.get_adc_sampling_times(seq)
-# 			_, traj = KomaMRI.get_kspace(seq)
+# 			times = KomaNYU.get_adc_sampling_times(seq)
+# 			_, traj = KomaNYU.get_kspace(seq)
 # 			TE = 0
-# 			AQ = maximum(seq[KomaMRI.is_ADC_on.(seq)].ADC.T)
+# 			AQ = maximum(seq[KomaNYU.is_ADC_on.(seq)].ADC.T)
 # 			tr = Trajectory(name, traj', times, TE, AQ, Ny, Nx, Nz, cartesian, !cartesian)
 # 			#RawData
 # 			sequenceInfo = Dict([Symbol(key) => value for (key,value) = seq.DEF]...)

@@ -1,6 +1,6 @@
 # Use Koma in Notebooks
 
-You can use **KomaMRI** with popular programming environments such as **Pluto** and **Jupyter** notebooks. The following sections show how to set up these notebooks and test **KomaMRI** with them.
+You can use **KomaNYU** with popular programming environments such as **Pluto** and **Jupyter** notebooks. The following sections show how to set up these notebooks and test **KomaNYU** with them.
 
 
 ## Pluto
@@ -29,7 +29,7 @@ Next, create a new notebook by clicking on `+ Create a new notebook`:
 <center><img src="../../assets/pluto-empty-notebook.png" alt="" style="width:75%;"></center>
 ```
 
-Write and run the following code, which is identical to the [Free Induction Decay example](#Free-Induction-Decay). **Pluto** automatically installs the required modules if they are not present on your system. Additionally, note that we do not directly use **KomaMRI** since we won't be utilizing the [`KomaUI`](@ref) function. Instead, we rely on the **KomaMRICore** and **KomaMRIPlots** dependencies. To display plots in **Pluto**, ensure that you import the **PlutoPlotly** package, as **KomaMRIPlots** requires its backend to display figures in **Pluto**:
+Write and run the following code, which is identical to the [Free Induction Decay example](#Free-Induction-Decay). **Pluto** automatically installs the required modules if they are not present on your system. Additionally, note that we do not directly use **KomaNYU** since we won't be utilizing the [`KomaUI`](@ref) function. Instead, we rely on the **KomaNYUCore** and **KomaNYUPlots** dependencies. To display plots in **Pluto**, ensure that you import the **PlutoPlotly** package, as **KomaNYUPlots** requires its backend to display figures in **Pluto**:
 ```@raw html
 <embed type="text/html" src="../../assets/pluto-fid-example.html" style="height:1024px;width:100%;">
 ```
@@ -48,11 +48,11 @@ julia>
 (@v1.9) pkg> add IJulia
 ```
 
-For this example, make sure to install **KomaMRICore** and **KomaMRIPlots** (we do not use **KomaMRI** directly since we won't be utilizing the `KomaUI()` function):
+For this example, make sure to install **KomaNYUCore** and **KomaNYUPlots** (we do not use **KomaNYU** directly since we won't be utilizing the `KomaUI()` function):
 ```julia-repl
-(@v1.9) pkg> add KomaMRICore
+(@v1.9) pkg> add KomaNYUCore
 
-(@v1.9) pkg> add KomaMRIPlots
+(@v1.9) pkg> add KomaNYUPlots
 ```
 
 Next, open **Jupyter**, navigate to a working folder, and create a new notebook by clicking on `New`, then `Julia 1.9.3`."
@@ -72,7 +72,7 @@ Proceed to write and execute the provided example:
 ```
 ```julia
 # Import modules
-using KomaMRICore, KomaMRIPlots
+using KomaNYUCore, KomaNYUPlots
 
 # Define sequence
 ampRF = 2e-6                        # 2 uT RF amplitude
@@ -100,7 +100,7 @@ plot_seq(seq; slider=false, height=300)
 ```
 
 
-This should be sufficient, and now you can start working with **KomaMRI** using **Jupyter** notebooks.
+This should be sufficient, and now you can start working with **KomaNYU** using **Jupyter** notebooks.
 
 If you encounter the issue of **WebIO** not being detected:
 ```@raw html

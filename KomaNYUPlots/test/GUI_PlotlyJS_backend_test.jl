@@ -1,6 +1,6 @@
 #GUI tests
 @testitem "PlotlyJS" tags=[:plots] begin
-    using KomaMRIBase, MRIFiles
+    using KomaNYUBase, MRIFiles
 
     @testset "GUI_phantom" begin
         ph = brain_phantom2D()    #2D phantom

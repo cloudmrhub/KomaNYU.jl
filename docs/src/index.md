@@ -1,8 +1,8 @@
 ## Introduction
 
-**KomaMRI** is a Julia package meant to simulate general Magnetic Resonance Imaging (MRI) scenarios. Its name comes from the Japanese word for spinning-top こま (ko-ma) as they precess due to gravity like spins in a magnetic field.
+**KomaNYU** is a Julia package meant to simulate general Magnetic Resonance Imaging (MRI) scenarios. Its name comes from the Japanese word for spinning-top こま (ko-ma) as they precess due to gravity like spins in a magnetic field.
 
-**KomaMRI** generates **raw data** by solving the **Bloch equations** using the specified **scanner**, **phantom** and **sequence**. It also provides a Graphical User Interface (GUI) that encapsulates the whole imaging pipeline (simulation and reconstruction).
+**KomaNYU** generates **raw data** by solving the **Bloch equations** using the specified **scanner**, **phantom** and **sequence**. It also provides a Graphical User Interface (GUI) that encapsulates the whole imaging pipeline (simulation and reconstruction).
 
 ```@raw html
 <p align="center"><img class="docs-light-only" width="100%" src="assets/koma-schema.svg"/></p>
@@ -16,7 +16,7 @@ We organized the documentation following the philosophy presented by [David Lain
     **Plain Text:**
 
     ```
-    Castillo-Passi, C, Coronado, R, Varela-Mattatall, G, Alberola-López, C, Botnar, R, Irarrazaval, P. KomaMRI.jl: An open-source framework for general MRI simulations with GPU acceleration. Magn Reson Med. 2023; 1- 14. doi: 10.1002/mrm.29635
+    Castillo-Passi, C, Coronado, R, Varela-Mattatall, G, Alberola-López, C, Botnar, R, Irarrazaval, P. KomaNYU.jl: An open-source framework for general MRI simulations with GPU acceleration. Magn Reson Med. 2023; 1- 14. doi: 10.1002/mrm.29635
     ```
 
     **BibTex:**
@@ -24,7 +24,7 @@ We organized the documentation following the philosophy presented by [David Lain
     ```
     @article{https://doi.org/10.1002/mrm.29635,
             author = {Castillo-Passi, Carlos and Coronado, Ronal and Varela-Mattatall, Gabriel and Alberola-López, Carlos and Botnar, René and Irarrazaval, Pablo},
-            title = {KomaMRI.jl: An open-source framework for general MRI simulations with GPU acceleration},
+            title = {KomaNYU.jl: An open-source framework for general MRI simulations with GPU acceleration},
             journal = {Magnetic Resonance in Medicine},
             keywords = {Bloch equations, GPU, GUI, Julia, open source, simulation},
             doi = {https://doi.org/10.1002/mrm.29635},

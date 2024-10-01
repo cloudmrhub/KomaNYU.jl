@@ -1,6 +1,6 @@
 # This document replicates the results of Figure 15g of the paper "The Return of the Frequency Sweep:
 # Designing Adiabatic Pulses for Contemporary NMR" by Michael Garwood and Lance DelaBarre.
-using KomaMRI, MAT, PlotlyJS, LinearAlgebra, ProgressMeter
+using KomaNYU, MAT, PlotlyJS, LinearAlgebra, ProgressMeter
 
 RF_wf = matread("./examples/4.adiabatic_pulses/BIR4.mat")
 R = 200 #Product duration and bandwidth

@@ -1,6 +1,6 @@
 # Compare speed of multi-shot spiral with MRiLab
 cd(dirname(@__FILE__))
-using KomaMRI, Suppressor
+using KomaNYU, Suppressor
 ## Scanner
 sys = Scanner()
 sys.Smax = 150    # [mT/m/ms]
@@ -14,7 +14,7 @@ B1 = 1e-6 # For 90 deg flip angle
 Trf = 1e-3
 rf = PulseDesigner.RF_sinc(B1, Trf, sys; TBP=4, a=0.46)
 α_desired = 90 + 0im
-α =  KomaMRI.get_flip_angles(rf)[1]
+α =  KomaNYU.get_flip_angles(rf)[1]
 rf *= α_desired / α #Linearly adjusts B1 to obtain desired FA
 # Spiral sequence
 TE = 50e-3  # 50e-3 [s]

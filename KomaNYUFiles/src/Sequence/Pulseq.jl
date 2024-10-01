@@ -328,7 +328,7 @@ Returns the Sequence struct from a Pulseq file with `.seq` extension.
 
 # Examples
 ```julia-repl
-julia> seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/1.sequences/spiral.seq")
+julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/1.sequences/spiral.seq")
 
 julia> seq = read_seq(seq_file)
 

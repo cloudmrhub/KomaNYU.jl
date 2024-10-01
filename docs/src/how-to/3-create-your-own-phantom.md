@@ -2,7 +2,7 @@
 
 In this section, we will create a custom **Phantom** struct. While the example is presented in 2D, the concepts discussed here can be readily extended to 3D phantoms.
 
-In **KomaMRI**, the creation of a **Phantom** struct involves defining spin position arrays (x, y, z) and spin property arrays. The indices of these arrays are then associated with independent spins.
+In **KomaNYU**, the creation of a **Phantom** struct involves defining spin position arrays (x, y, z) and spin property arrays. The indices of these arrays are then associated with independent spins.
 
 For instance, you can create a **Phantom** with one spin like so:
 ```julia
@@ -34,23 +34,23 @@ Phantom{Float64}
   Dλ1: Array{Float64}((1,)) [0.0]
   Dλ2: Array{Float64}((1,)) [0.0]
   Dθ: Array{Float64}((1,)) [0.0]
-  ux: #122 (function of type KomaMRICore.var"#122#136")
-  uy: #123 (function of type KomaMRICore.var"#123#137")
-  uz: #124 (function of type KomaMRICore.var"#124#138")
+  ux: #122 (function of type KomaNYUCore.var"#122#136")
+  uy: #123 (function of type KomaNYUCore.var"#123#137")
+  uz: #124 (function of type KomaNYUCore.var"#124#138")
 ```
 
 You can add more properties to the **Phantom**, such as off-resonance, diffusion parameters, and even functions of motion. However, we won't be utilizing them (except for the off-resonance parameter) to maintain simplicity.
 
 If you are familiar with the **MRI** world, you likely have a 2D or 3D array, where each element contains an ID number identifying a different class of tissue. In this setup, the array axes represent spatial positions, while the elements are used for tissue identification.
 
-In this example, we will utilize a `.mat` file containing arrays with such arrangements. The file is readily available upon installing **KomaMRI**. Let's read the file and store the 2D data in an array called `class`:"
+In this example, we will utilize a `.mat` file containing arrays with such arrangements. The file is readily available upon installing **KomaNYU**. Let's read the file and store the 2D data in an array called `class`:"
 ```julia
 # Import necessary modules
-using KomaMRI, MAT
+using KomaNYU, MAT
 
 # Get data from a .mat file
-path_koma = dirname(dirname(pathof(KomaMRI)))
-path_phantom_mat = joinpath(path_koma, "KomaMRIBase", "src", "datatypes", "phantom", "pelvis2D.mat")
+path_koma = dirname(dirname(pathof(KomaNYU)))
+path_phantom_mat = joinpath(path_koma, "KomaNYUBase", "src", "datatypes", "phantom", "pelvis2D.mat")
 data = MAT.matread(path_phantom_mat)
 class = data["pelvis3D_slice"]
 ```

@@ -30,8 +30,8 @@ using TestItems, TestItemRunner
 
         # Test Pulseq compression-decompression
         shape = ones(100)
-        num_samples, compressed_data = KomaMRIFiles.compress_shape(shape)
-        shape2 = KomaMRIFiles.decompress_shape(num_samples, compressed_data)
+        num_samples, compressed_data = KomaNYUFiles.compress_shape(shape)
+        shape2 = KomaNYUFiles.decompress_shape(num_samples, compressed_data)
         @test shape == shape2
     end
     # Test JEMRIS
@@ -50,7 +50,7 @@ using TestItems, TestItemRunner
     end
     # Test Phantom (.phantom)
     @testset "Phantom" begin
-        using KomaMRIBase
+        using KomaNYUBase
         path = @__DIR__
         # NoMotion
         filename = path * "/test_files/brain_nomotion_w.phantom"
@@ -93,7 +93,7 @@ using TestItems, TestItemRunner
 end
 
 @testitem "Pulseq compat" tags=[:files, :pulseq] begin
-    using MAT, KomaMRIBase, Suppressor
+    using MAT, KomaNYUBase, Suppressor
 
     # Aux functions
     inside(x) = x[2:end-1]

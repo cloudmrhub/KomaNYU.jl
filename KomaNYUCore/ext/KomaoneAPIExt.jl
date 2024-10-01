@@ -1,16 +1,16 @@
 module KomaoneAPIExt
 
 using oneAPI
-import KomaMRICore
+import KomaNYUCore
 import Adapt
 
-KomaMRICore.name(::oneAPIBackend) = "oneAPI"
-KomaMRICore.isfunctional(::oneAPIBackend) = oneAPI.functional()
-KomaMRICore.set_device!(::oneAPIBackend, val) = oneAPI.device!(val)
-KomaMRICore.device_name(::oneAPIBackend) = oneAPI.properties(oneAPI.device()).name
-@inline KomaMRICore._cis(x) = cos(x) + im * sin(x)
+KomaNYUCore.name(::oneAPIBackend) = "oneAPI"
+KomaNYUCore.isfunctional(::oneAPIBackend) = oneAPI.functional()
+KomaNYUCore.set_device!(::oneAPIBackend, val) = oneAPI.device!(val)
+KomaNYUCore.device_name(::oneAPIBackend) = oneAPI.properties(oneAPI.device()).name
+@inline KomaNYUCore._cis(x) = cos(x) + im * sin(x)
 
-function KomaMRICore._print_devices(::oneAPIBackend)
+function KomaNYUCore._print_devices(::oneAPIBackend)
     devices = [
         Symbol("($(i-1)$(i == 1 ? "*" : " "))") => oneAPI.properties(d).name for
         (i, d) in enumerate(oneAPI.devices())
@@ -20,8 +20,8 @@ end
 
 #Temporary workaround since oneAPI.jl (similar to Metal) does not support some array operations
 #Once run_spin_excitation! and run_spin_precession! are kernel-based, this code can be removed
-Base.cumsum(x::oneVector{T}) where T = convert(oneVector{T}, cumsum(KomaMRICore.cpu(x)))
-Base.findall(x::oneVector{Bool}) = convert(oneVector, findall(KomaMRICore.cpu(x)))
+Base.cumsum(x::oneVector{T}) where T = convert(oneVector{T}, cumsum(KomaNYUCore.cpu(x)))
+Base.findall(x::oneVector{Bool}) = convert(oneVector, findall(KomaNYUCore.cpu(x)))
 
 using KernelAbstractions: @index, @kernel, @Const, synchronize
 
@@ -58,8 +58,8 @@ end
 ## COV_EXCL_STOP
 
 function __init__()
-    push!(KomaMRICore.LOADED_BACKENDS[], oneAPIBackend())
-    @warn "oneAPI does not support all array operations used by KomaMRI. GPU performance may be slower than expected"
+    push!(KomaNYUCore.LOADED_BACKENDS[], oneAPIBackend())
+    @warn "oneAPI does not support all array operations used by KomaNYU. GPU performance may be slower than expected"
 end
 
 end

@@ -7,7 +7,7 @@ In the following subsections, we will provide detailed explanations of event par
 
 ## RF
 
-The **RF** struct is defined in the source code of **KomaMRI** as follows:
+The **RF** struct is defined in the source code of **KomaNYU** as follows:
 ```julia
 mutable struct RF
     A
@@ -19,7 +19,7 @@ end
 
 As you can see, it has 4 field names: ''A'' defines amplitude, ''T'' defines duration time, ''delay'' is the distance between the 0 time and the first waveform sample and ''Δf'' is the displacement respect to the main field carrier frequency (this is for advanced users).
 
-''A'' and ''T'' can be numbers or vectors of numbers. Depending on the length of the ''A'' and ''T'', **KomaMRI** interprets different waveforms: 
+''A'' and ''T'' can be numbers or vectors of numbers. Depending on the length of the ''A'' and ''T'', **KomaNYU** interprets different waveforms: 
 * Pulse Waveform: A and T are numbers
 * Uniformly-Sampled Waveform: A is a vector and T is a number
 * Time-Shaped Waveform: A and T are both vectors with the same length (zero-order-hold)
@@ -96,7 +96,7 @@ julia> plot_seq(seq; slider=false)
 
 ## Gradient
 
-The **Grad** struct is defined as follows in the source code of **KomaMRI**:
+The **Grad** struct is defined as follows in the source code of **KomaNYU**:
 ```julia
 mutable struct Grad
     A
@@ -109,7 +109,7 @@ end
 
 As you can see, it has 5 field names: ''A'' defines amplitude, ''T'' defines duration time, ''delay'' is the distance between the 0 time and the first waveform sample, ''rise'' and ''fall'' are the time durations of the first and last gradient ramps.
 
-Just like the **RF**, ''A'' and ''T'' in the **Grad** struct can be numbers or vectors of numbers. Depending on the length of the ''A'' and ''T'', **KomaMRI** interprets different waveforms: 
+Just like the **RF**, ''A'' and ''T'' in the **Grad** struct can be numbers or vectors of numbers. Depending on the length of the ''A'' and ''T'', **KomaNYU** interprets different waveforms: 
 * Trapezoidal Waveform: A and T are numbers
 * Uniformly-Sampled Waveform: A is a vector and T is a number
 * Time-Shaped Waveform: A and T are both vectors, A has one sample more the T (linear interpolation)
@@ -185,7 +185,7 @@ julia> plot_seq(seq; slider=false)
 
 ## ADC
 
-The **ADC** struct is defined in the **KomaMRI** source code as follows:
+The **ADC** struct is defined in the **KomaNYU** source code as follows:
 ```julia
 mutable struct ADC
     N::Integer

@@ -133,7 +133,7 @@ dur(x::Matrix{RF}) = maximum(dur.(x); dims=1)[:]
 Generate an RF sequence with amplitudes sampled from a function waveform.
 
 !!! note
-    This function is not being used in this KomaMRI version.
+    This function is not being used in this KomaNYU version.
 
 # Arguments
 - `f`: (`::Function`, [`T`]) function for the RF amplitud waveform

@@ -1,1 +1,1 @@
-# KomaMRIPlots
+# KomaNYUPlots

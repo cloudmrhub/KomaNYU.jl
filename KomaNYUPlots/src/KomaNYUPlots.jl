@@ -1,6 +1,6 @@
-module KomaMRIPlots
+module KomaNYUPlots
 
-using KomaMRIBase
+using KomaNYUBase
 using MAT, Interpolations, PlotlyJS
 
 include("ui/PlotBackends.jl")

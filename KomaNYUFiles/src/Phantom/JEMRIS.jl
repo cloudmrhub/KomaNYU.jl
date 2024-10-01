@@ -11,7 +11,7 @@ Returns the Phantom struct from a JEMRIS phantom file `.h5`.
 
 # Examples
 ```julia-repl
-julia> obj_file = joinpath(dirname(pathof(KomaMRI)), "../examples/2.phantoms/brain.h5")
+julia> obj_file = joinpath(dirname(pathof(KomaNYU)), "../examples/2.phantoms/brain.h5")
 
 julia> obj = read_phantom_jemris(obj_file)
 

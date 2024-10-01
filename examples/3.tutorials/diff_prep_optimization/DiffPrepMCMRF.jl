@@ -1,7 +1,7 @@
 # Code used to generate moment-compensated diffusion gradient waveforms
 # Sequence optimization for diffusion prepared motion-compensated MRF
 
-using KomaMRI, KomaMRICore, JuMP, Ipopt, Dates
+using KomaNYU, KomaNYUCore, JuMP, Ipopt, Dates
 using LinearAlgebra: I, Bidiagonal, norm, Diagonal, Tridiagonal
 using Printf
 using PlotlyJS
@@ -162,9 +162,9 @@ function write_diffprep_fwf(G1, G2, G3, bmax, Gmax, Smax; filename="./qte_vector
 		t2 = range(0, G2.GR.dur[1] - maximum(G2.GR.delay), step=dwell_time) #length=δ2N(maximum(G2.GR.T)))
         t3 = range(0, G3.GR.dur[1] - maximum(G3.GR.delay), step=dwell_time) #length=δ2N(maximum(G3.GR.T)))
         maxN = max(length(t1), length(t2), length(t3))
-        Gx1, Gy1, Gz1 = KomaMRICore.get_grads(G1, Array(t1).+maximum(G1.GR.delay))
-		Gx2, Gy2, Gz2 = KomaMRICore.get_grads(G2, Array(t2).+maximum(G2.GR.delay))
-        Gx3, Gy3, Gz3 = KomaMRICore.get_grads(G3, Array(t3).+maximum(G3.GR.delay))
+        Gx1, Gy1, Gz1 = KomaNYUCore.get_grads(G1, Array(t1).+maximum(G1.GR.delay))
+		Gx2, Gy2, Gz2 = KomaNYUCore.get_grads(G2, Array(t2).+maximum(G2.GR.delay))
+        Gx3, Gy3, Gz3 = KomaNYUCore.get_grads(G3, Array(t3).+maximum(G3.GR.delay))
         Gx1_round = round.(Gx1 ./ Gmax, digits=precision)
         Gx2_round = round.(Gx2 ./ Gmax, digits=precision)
         Gx3_round = round.(Gx3 ./ Gmax, digits=precision)
@@ -230,7 +230,7 @@ function write_diffprep_fwf(G1, G2, G3, bmax, Gmax, Smax; filename="./qte_vector
         # @assert all(MX .== 0)
         #BVAL
         t = range(0, dur(G1+G2+G3), step=dwell_time)
-        Gx, Gy, Gz = KomaMRICore.get_grads(G1-G2+G3, Array(t))
+        Gx, Gy, Gz = KomaNYUCore.get_grads(G1-G2+G3, Array(t))
         bvalx = (2π*γ)^2 * 1e-6 * sum(cumsum(Gx * dwell_time).^2 * dwell_time)
         bvaly = (2π*γ)^2 * 1e-6 * sum(cumsum(Gy * dwell_time).^2 * dwell_time)
         bvalz = (2π*γ)^2 * 1e-6 * sum(cumsum(Gz * dwell_time).^2 * dwell_time)
@@ -577,7 +577,7 @@ for k = moment_to_calc #Number of moments to null
         #     scatter(x=λ_spectra*1e3, y=log.(abs.(ec_spectraB0)), name="EC_B0"),
         #     scatter(x=λ_spectra*1e3, y=log.(abs.(ec_spectraGradM0)), name="EC_GradM0")
         #     ])
-        # p7 = KomaMRIPlots.plot_slew_rate(DIF; slider=false, range=[0,τ])
+        # p7 = KomaNYUPlots.plot_slew_rate(DIF; slider=false, range=[0,τ])
         p = [p1; p2 p3; p5]
         # display(p)
         savefig(p, path_res*"$seq_name.svg")

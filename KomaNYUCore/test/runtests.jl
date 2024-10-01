@@ -3,12 +3,12 @@ using TestItems, TestItemRunner
 ### NOTE: by default, tests are run on the CPU with the number of threads set to
 #   Threads.nthreads(). To run on a specific GPU backend, add the name of the
 #   backend package ("AMDGPU", "CUDA", "Metal", or "oneAPI") to the test/Project.toml
-#   file in KomaMRICore and pass the name as a test argument.
+#   file in KomaNYUCore and pass the name as a test argument.
 #
 #   Example:
 #
 #   import Pkg
-#   Pkg.test("KomaMRICore"; test_args=["CUDA"])
+#   Pkg.test("KomaNYUCore"; test_args=["CUDA"])
 #
 #   To run on the cpu with a specific number of threads, pass the number of threads
 #   as a julia argument.
@@ -16,12 +16,12 @@ using TestItems, TestItemRunner
 #   Example:
 #
 #   import Pkg
-#   Pkg.test("KomaMRICore"; julia_args=`--threads=4`)
+#   Pkg.test("KomaNYUCore"; julia_args=`--threads=4`)
 #
 #   For changing the default backend used for testing,
-#   modify the [preferences.KomaMRICore] section in the test/Project.toml:
+#   modify the [preferences.KomaNYUCore] section in the test/Project.toml:
 #
-#     [preferences.KomaMRICore]
+#     [preferences.KomaNYUCore]
 #     test_backend = "CPU"
 #
 #   For the backend preference to take effect, you need to:
@@ -40,7 +40,7 @@ const group = get(ENV, "TEST_GROUP", :core) |> Symbol
 @run_package_tests filter=ti->(group in ti.tags)&&(isnothing(CI) || :skipci ∉ ti.tags) #verbose=true
 
 @testitem "Spinors×Mag" tags=[:core, :nomotion] begin
-    using KomaMRICore: Rx, Ry, Rz, Q, rotx, roty, rotz, Un, Rφ, Rg
+    using KomaNYUCore: Rx, Ry, Rz, Q, rotx, roty, rotz, Un, Rφ, Rg
 
     ## Verifying that operators perform counter-clockwise rotations
     v = [1, 2, 3]
@@ -179,7 +179,7 @@ end
     obj = brain_phantom2D()
     parts = kfoldperm(length(obj), 2)
 
-    sim_params = KomaMRICore.default_sim_params()
+    sim_params = KomaNYUCore.default_sim_params()
     sim_params["return_type"] = "raw"
     sim_params["gpu"] = USE_GPU
 
@@ -198,7 +198,7 @@ end
     sys = Scanner()
     obj = brain_phantom2D()
 
-    sim_params = KomaMRICore.default_sim_params()
+    sim_params = KomaNYUCore.default_sim_params()
     sim_params["return_type"] = "mat"
     sim_params["gpu"] = USE_GPU
     sig = @suppress simulate(obj, seq, sys; sim_params)
@@ -232,7 +232,7 @@ end
 
     sim_params = Dict{String, Any}(
         "gpu"=>USE_GPU,
-        "sim_method"=>KomaMRICore.Bloch(),
+        "sim_method"=>KomaNYUCore.Bloch(),
         "return_type"=>"mat"
     )
     sig = @suppress simulate(obj, seq, sys; sim_params)
@@ -329,17 +329,17 @@ end
     sys = Scanner()
     sim_params = Dict(
         "gpu"=>USE_GPU,
-        "sim_method"=>KomaMRICore.Bloch(),
+        "sim_method"=>KomaNYUCore.Bloch(),
         "return_type"=>"mat")
     sig = @suppress simulate(obj, seq, sys; sim_params)
     sig = sig / prod(size(obj))
-    sim_params["sim_method"] = KomaMRICore.BlochDict()
+    sim_params["sim_method"] = KomaNYUCore.BlochDict()
     sig2 = @suppress simulate(obj, seq, sys; sim_params)
     sig2 = sig2 / prod(size(obj))
     @test sig ≈ sig2
 
     # Just checking to ensure that show() doesn't get stuck and that it is covered
-    show(IOBuffer(), "text/plain", KomaMRICore.BlochDict())
+    show(IOBuffer(), "text/plain", KomaNYUCore.BlochDict())
     @test true
 end
 
@@ -355,7 +355,7 @@ end
 
     sim_params = Dict{String, Any}(
         "gpu"=>USE_GPU,
-        "sim_method"=>KomaMRICore.BlochSimple(),
+        "sim_method"=>KomaNYUCore.BlochSimple(),
         "return_type"=>"mat"
     )
     sig = @suppress simulate(obj, seq, sys; sim_params)
@@ -450,7 +450,7 @@ end
     y0 = [0.1]
     z0 = [0.0]
 
-    for sim_method in [KomaMRICore.Bloch(), KomaMRICore.BlochSimple(), KomaMRICore.BlochDict()]
+    for sim_method in [KomaNYUCore.Bloch(), KomaNYUCore.BlochSimple(), KomaNYUCore.BlochDict()]
         @testset "$(typeof(sim_method))" begin
             for m in motions
                 motion = MotionList(m)
@@ -478,7 +478,7 @@ end
                 sol_diffeq = hcat(sol.u...)'
                 mxy_diffeq = sol_diffeq[:, 1] + im * sol_diffeq[:, 2]
 
-                ## Solving using KomaMRICore.jl
+                ## Solving using KomaNYUCore.jl
                 # Creating Sequence
                 seq = Sequence()
                 seq += RF(cis(φ) .* B1, Trf)

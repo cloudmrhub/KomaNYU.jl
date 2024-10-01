@@ -2,32 +2,32 @@
 
 ## General Overview
 
-**KomaMRI** simulates the magnetization of each spin of a **Phantom** for variable magnetic fields given by a **Sequence**. It is assumed that a single spin is independent of the state of the other spins in the system (a key feature that enables parallelization). Furthermore, there are defined two regimes in the **Sequence**: excitation and precession. During the latter, the excitation fields are nulled and are useful for simplifying some physical equations.
+**KomaNYU** simulates the magnetization of each spin of a **Phantom** for variable magnetic fields given by a **Sequence**. It is assumed that a single spin is independent of the state of the other spins in the system (a key feature that enables parallelization). Furthermore, there are defined two regimes in the **Sequence**: excitation and precession. During the latter, the excitation fields are nulled and are useful for simplifying some physical equations.
 
-The are more internal considerations in the **KomaMRI** implementation. The **Figure 1** summarizes the functions called to perform the simulation.
+The are more internal considerations in the **KomaNYU** implementation. The **Figure 1** summarizes the functions called to perform the simulation.
 ```@raw html
 <center><img width="100%" src="../../assets/koma-solution.svg"></center>
 ```
-**Figure 1**: The sequence `seq` is discretized after calculating the required time points in the wrapper function [simulate](@ref). The time points are then divided into `Nblocks` to reduce the amount of memory used. The phantom `obj` is divided into `Nthreads`, and **KomaMRI** will use either `run_spin_excitation!` or `run_spin_precession!` depending on the regime. If an [`ADC`](@ref) object is present, the simulator will add the signal contributions of each thread to construct the acquired signal `sig[t]`. All the parameters: `Nthreads`, `Nblocks`, `Δt_rf`, and `Δt`, are passed through a dictionary called `sim_params` as an optional parameter of the simulate function.
+**Figure 1**: The sequence `seq` is discretized after calculating the required time points in the wrapper function [simulate](@ref). The time points are then divided into `Nblocks` to reduce the amount of memory used. The phantom `obj` is divided into `Nthreads`, and **KomaNYU** will use either `run_spin_excitation!` or `run_spin_precession!` depending on the regime. If an [`ADC`](@ref) object is present, the simulator will add the signal contributions of each thread to construct the acquired signal `sig[t]`. All the parameters: `Nthreads`, `Nblocks`, `Δt_rf`, and `Δt`, are passed through a dictionary called `sim_params` as an optional parameter of the simulate function.
 
 From the programming perspective, it is needed to call the [`simulate`](@ref) function with the `sim_params` dictionary keyword argument. A user can change the values of the following keys:
 
 | Parameter | Description |
 |:---|:---|
 |`"return_type"` | defines the output of the [`simulate`](@ref) function. Possible values are `"raw"`, `"mat"`, and `"state"`, corresponding to outputting a **MRIReco** `RawAcquisitionData`, the signal values, and the last magnetization state of the simulation, respectively. |
-| `"sim_method"` | defines the type of simulation. The default value is `Bloch()`, but you can alternatively use the `BlochDict()` simulation method. Moreover, you have the flexibility to create your own methods without altering the **KomaMRI** source code; for further details, refer to the [Simulation Method Extensibility section](#Simulation-Method-Extensibility). |
+| `"sim_method"` | defines the type of simulation. The default value is `Bloch()`, but you can alternatively use the `BlochDict()` simulation method. Moreover, you have the flexibility to create your own methods without altering the **KomaNYU** source code; for further details, refer to the [Simulation Method Extensibility section](#Simulation-Method-Extensibility). |
 | `"Δt"` | raster time for gradients. |
 | `"Δt_rf"` | raster time for RFs. |
 | `"precision"` | defines the floating-point simulation precision. You can choose between `"f32"` and `"f64"` to use `Float32` and `Float64` primitive types, respectively. It's important to note that, especially for GPU operations, using `"f32"` is generally much faster. |
-| `"Nblocks"` | divides the simulation into a specified number of time blocks. This parameter is designed to conserve RAM resources, as **KomaMRI** computes a series of simulations consecutively, each with the specified number of blocks determined by the value of `"Nblocks"`. |
-| `"Nthreads"` | divides the **Phantom** into a specified number of threads. Because spins are modeled independently of each other, **KomaMRI** can solve simulations in parallel threads, speeding up the execution time. |
+| `"Nblocks"` | divides the simulation into a specified number of time blocks. This parameter is designed to conserve RAM resources, as **KomaNYU** computes a series of simulations consecutively, each with the specified number of blocks determined by the value of `"Nblocks"`. |
+| `"Nthreads"` | divides the **Phantom** into a specified number of threads. Because spins are modeled independently of each other, **KomaNYU** can solve simulations in parallel threads, speeding up the execution time. |
 | `"gpu"` | is a boolean that determines whether to use GPU or CPU hardware resources, as long as they are available on the host computer. |
 | `"gpu_device"` | sets the index ID of the available GPU in the host computer. |
 
 For instance, if you want to perform a simulation on the CPU with float64 precision using the `BlochDict()` method (assuming you have already defined `obj` and `seq`), you can do so like this:
 ```julia
 # Set non-default simulation parameters and run simulation
-sim_params = KomaMRICore.default_sim_params() 
+sim_params = KomaNYUCore.default_sim_params() 
 sim_params["gpu"] = false
 sim_params["precision"] = "f64"
 sim_params["sim_method"] = BlochDict()
@@ -40,7 +40,7 @@ Previous simulation, the **Sequence** is discretized to consider specific time p
 
 ### Computation Efficiency
 
-To reduce the memory usage of our simulator, we subdivided time into `Nblocks`. **KomaMRI** classifies each block in either the excitation regime or the precession regime before the simulation.
+To reduce the memory usage of our simulator, we subdivided time into `Nblocks`. **KomaNYU** classifies each block in either the excitation regime or the precession regime before the simulation.
 
 We increased the simulation speed by separating the calculations into `Nthreads` and then performing the GPU parallel operations with **CUDA.jl** . This separation is possible as all magnetization vectors are independent of one another.
 
@@ -51,11 +51,11 @@ In **Julia**, functions use different methods based on the input types via multi
 
 ## Bloch Simulation Method
 
-This is the default simulation method used by **KomaMRI**, however it can always be specified by setting the `sim_method = Bloch()` entry of the `sim_params` dictionary. In the following subsection, we will explain the physical and mathematical background and some considerations and assumptions that enables to speed up the simulation.
+This is the default simulation method used by **KomaNYU**, however it can always be specified by setting the `sim_method = Bloch()` entry of the `sim_params` dictionary. In the following subsection, we will explain the physical and mathematical background and some considerations and assumptions that enables to speed up the simulation.
 
 ### Physical and Mathematical Background
 
-The **Bloch** method of **KomaMRI** simulates the magnetization of each spin by solving the Bloch equations in the rotating frame:
+The **Bloch** method of **KomaNYU** simulates the magnetization of each spin by solving the Bloch equations in the rotating frame:
 ```math
 \begin{align} \tag{1}
 
@@ -128,7 +128,7 @@ We will consider an RF pulse that excites a phantom with 3 spins, and then we ac
 ```
 ```julia
 # Import modules
-using KomaMRI
+using KomaNYU
 
 # Define sequence
 ampRF = 2e-6                        # 2 uT RF amplitude
@@ -160,7 +160,7 @@ julia> plot_seq(seq; slider=false)
 The resulting signal from the **Bloch()** method is the sum of magnetizations in the transverse plane (x, y):
 ```julia
 # Configure Bloch() simulation method and run simulation
-sim_params = KomaMRICore.default_sim_params()
+sim_params = KomaNYUCore.default_sim_params()
 sim_params["return_type"] = "mat"
 sim_params["sim_method"] = Bloch()
 sig = simulate(obj, seq, sys; sim_params)
@@ -174,7 +174,7 @@ julia> plot(abs.(sig[:,1,1]))
 
 ## BlochDict Simulation Method
 
-This is another simulation method defined in the source code of **KomaMRI**. You can specify it by setting the `sim_method = BlochDict()` entry in the `sim_params` dictionary. Additionally, it offers the option to save the resulting signal in the z-component by using `sim_method = BlochDict(save_Mz=true)`. This method allows you to store the magnetizations of all spins in both the transverse plane (x, y) and the longitudinal axis (z) if specified.
+This is another simulation method defined in the source code of **KomaNYU**. You can specify it by setting the `sim_method = BlochDict()` entry in the `sim_params` dictionary. Additionally, it offers the option to save the resulting signal in the z-component by using `sim_method = BlochDict(save_Mz=true)`. This method allows you to store the magnetizations of all spins in both the transverse plane (x, y) and the longitudinal axis (z) if specified.
 
 ### BlochDict() Method Example
 
@@ -184,7 +184,7 @@ We are going to consider the same setup as in the [Bloch() Method Example](#Bloc
 ```
 ```julia
 # Import modules
-using KomaMRI, PlotlyJS
+using KomaNYU, PlotlyJS
 
 # Define sequence
 ampRF = 2e-6                        # 2 uT RF amplitude
@@ -216,7 +216,7 @@ julia> plot_seq(seq; slider=false)
 The resulting signal from the **BlochDict()** method comprises the individual magnetizations of all spins in both the transverse plane (x, y) and the longitudinal axis (z):
 ```julia
 # Configure BlochDict() simulation method and run simulation
-sim_params = KomaMRICore.default_sim_params()
+sim_params = KomaNYUCore.default_sim_params()
 sim_params["return_type"] = "mat"
 sim_params["sim_method"] = BlochDict(save_Mz=true)
 sig = simulate(obj, seq, sys; sim_params)

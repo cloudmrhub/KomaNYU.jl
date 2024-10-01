@@ -1,4 +1,4 @@
-name = "KomaMRIBase"
+name = "KomaNYUBase"
 uuid = "d0bc0b20-b151-4d03-b2a4-6ca51751cb9c"
 authors = ["Carlos Castillo Passi <cncastillo@uc.cl>"]
 version = "0.9.0"

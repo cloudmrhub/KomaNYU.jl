@@ -10,11 +10,11 @@ on:
     branches:
       - master
     paths:
-      - "KomaMRICore/src/**/*"
-      - "KomaMRICore/ext/**/*"
-      - "KomaMRICore/Project.toml"
-      - "KomaMRIBase/src/**/*"
-      - "KomaMRIBase/Project.toml"
+      - "KomaNYUCore/src/**/*"
+      - "KomaNYUCore/ext/**/*"
+      - "KomaNYUCore/Project.toml"
+      - "KomaNYUBase/src/**/*"
+      - "KomaNYUBase/Project.toml"
       - "benchmarks/**/*"
       - ".buildkite/**/*"
       - "Project.toml"
@@ -23,11 +23,11 @@ on:
     branches:
       - master
     paths:
-      - "KomaMRICore/src/**/*"
-      - "KomaMRICore/ext/**/*"
-      - "KomaMRICore/Project.toml"
-      - "KomaMRIBase/src/**/*"
-      - "KomaMRIBase/Project.toml"
+      - "KomaNYUCore/src/**/*"
+      - "KomaNYUCore/ext/**/*"
+      - "KomaNYUCore/Project.toml"
+      - "KomaNYUBase/src/**/*"
+      - "KomaNYUBase/Project.toml"
       - "benchmarks/**/*"
       - ".buildkite/**/*"
       - "Project.toml"
@@ -57,7 +57,7 @@ jobs:
         if: ${{ steps.locate.outputs.path != '' }}
         uses: benchmark-action/github-action-benchmark@v1
         with:
-          name: KomaMRI Benchmarks
+          name: KomaNYU Benchmarks
           tool: 'julia'
           output-file-path: ${{ steps.locate.outputs.path }}
           benchmark-data-dir-path: "benchmarks"

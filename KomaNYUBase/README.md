@@ -1,1 +1,1 @@
-# KomaMRIBase
+# KomaNYUBase

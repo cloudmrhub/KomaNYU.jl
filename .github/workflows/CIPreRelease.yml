@@ -39,77 +39,77 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
-      - name: "KomaMRIBase: Build"
+      - name: "KomaNYUBase: Build"
         if: '!cancelled()'
         uses: julia-actions/julia-buildpkg@v1
         with:
-          project: KomaMRIBase
-      - name: "KomaMRIBase: Run Tests"
+          project: KomaNYUBase
+      - name: "KomaNYUBase: Run Tests"
         if: '!cancelled()'
         uses: julia-actions/julia-runtest@v1
         with:
-          project: KomaMRIBase
-      - name: "KomaMRICore: Development Setup"
+          project: KomaNYUBase
+      - name: "KomaNYUCore: Development Setup"
         if: '!cancelled()'
         shell: bash
         run: |
-          julia --color=yes --project="KomaMRICore" -e "using Pkg; Pkg.develop(PackageSpec(; path=\"./KomaMRIBase\"));"
-      - name: "KomaMRICore: Build"
+          julia --color=yes --project="KomaNYUCore" -e "using Pkg; Pkg.develop(PackageSpec(; path=\"./KomaNYUBase\"));"
+      - name: "KomaNYUCore: Build"
         if: '!cancelled()'
         uses: julia-actions/julia-buildpkg@v1
         with:
-          project: KomaMRICore
-      - name: "KomaMRICore: Run Tests"
+          project: KomaNYUCore
+      - name: "KomaNYUCore: Run Tests"
         if: '!cancelled()'
         uses: julia-actions/julia-runtest@v1
         with:
-          project: KomaMRICore
-      - name: "KomaMRIFiles: Development Setup"
+          project: KomaNYUCore
+      - name: "KomaNYUFiles: Development Setup"
         if: '!cancelled()'
         shell: bash
         run: |
-          julia --color=yes --project="KomaMRIFiles" -e "using Pkg; Pkg.develop(PackageSpec(; path=\"./KomaMRIBase\"));"
-      - name: "KomaMRIFiles: Build"
+          julia --color=yes --project="KomaNYUFiles" -e "using Pkg; Pkg.develop(PackageSpec(; path=\"./KomaNYUBase\"));"
+      - name: "KomaNYUFiles: Build"
         if: '!cancelled()'
         uses: julia-actions/julia-buildpkg@v1
         with:
-          project: KomaMRIFiles
-      - name: "KomaMRIFiles: Run Tests"
+          project: KomaNYUFiles
+      - name: "KomaNYUFiles: Run Tests"
         if: '!cancelled()'
         uses: julia-actions/julia-runtest@v1
         with:
-          project: KomaMRIFiles
-      - name: "KomaMRIPlots: Development Setup"
+          project: KomaNYUFiles
+      - name: "KomaNYUPlots: Development Setup"
         if: '!cancelled()'
         shell: bash
         run: |
-          julia --color=yes --project="KomaMRIPlots" -e "using Pkg; Pkg.develop(PackageSpec(; path=\"./KomaMRIBase\"));"
-      - name: "KomaMRIPlots: Build"
+          julia --color=yes --project="KomaNYUPlots" -e "using Pkg; Pkg.develop(PackageSpec(; path=\"./KomaNYUBase\"));"
+      - name: "KomaNYUPlots: Build"
         if: '!cancelled()'
         uses: julia-actions/julia-buildpkg@v1
         with:
-          project: KomaMRIPlots
-      - name: "KomaMRIPlots: Run Tests"
+          project: KomaNYUPlots
+      - name: "KomaNYUPlots: Run Tests"
         if: '!cancelled()'
         uses: julia-actions/julia-runtest@v1
         with:
-          project: KomaMRIPlots
+          project: KomaNYUPlots
           prefix: ${{ matrix.prefix }}  # for `xvfb-run`
-      - name: "KomaMRI: Development Setup"
+      - name: "KomaNYU: Development Setup"
         if: '!cancelled()'
         shell: julia --color=yes --project {0}
         run: |
           using Pkg
           Pkg.develop([
-              PackageSpec(path=pwd(), subdir="KomaMRIBase"),
-              PackageSpec(path=pwd(), subdir="KomaMRICore"),
-              PackageSpec(path=pwd(), subdir="KomaMRIFiles"),
-              PackageSpec(path=pwd(), subdir="KomaMRIPlots")
+              PackageSpec(path=pwd(), subdir="KomaNYUBase"),
+              PackageSpec(path=pwd(), subdir="KomaNYUCore"),
+              PackageSpec(path=pwd(), subdir="KomaNYUFiles"),
+              PackageSpec(path=pwd(), subdir="KomaNYUPlots")
           ])
-      - name: "KomaMRI: Build"
+      - name: "KomaNYU: Build"
         if: '!cancelled()'
         uses: julia-actions/julia-buildpkg@v1
-      - name: "KomaMRI: Run Tests"
+      - name: "KomaNYU: Run Tests"
         if: '!cancelled()'
         uses: julia-actions/julia-runtest@v1
         with:

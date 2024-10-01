@@ -1,4 +1,4 @@
-module KomaMRIBase
+module KomaNYUBase
 
 #IMPORT PACKAGES
 import Base.*, Base.+, Base.-, Base./, Base.vcat, Base.size, Base.abs, Base.getproperty
@@ -66,4 +66,4 @@ export get_Mk, get_kspace, get_M0, get_M1, get_M2
 include("sequences/PulseDesigner.jl")
 export PulseDesigner
 
-end # module KomaMRIBase
+end # module KomaNYUBase

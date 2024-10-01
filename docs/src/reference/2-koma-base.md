@@ -1,7 +1,7 @@
-# KomaMRIBase
+# KomaNYUBase
 
 ```@meta
-CurrentModule = KomaMRIBase
+CurrentModule = KomaNYUBase
 ```
 
 ## `Scanner`-related functions

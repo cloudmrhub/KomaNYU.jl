@@ -1,17 +1,17 @@
 module KomaAMDGPUExt
 
 using AMDGPU
-import KomaMRICore
+import KomaNYUCore
 import Adapt
 
-KomaMRICore.name(::ROCBackend) = "AMDGPU"
-KomaMRICore.isfunctional(::ROCBackend) = AMDGPU.functional()
-KomaMRICore.set_device!(::ROCBackend, dev_idx::Integer) = AMDGPU.device_id!(dev_idx)
-KomaMRICore.set_device!(::ROCBackend, dev::AMDGPU.HIPDevice) = AMDGPU.device!(dev)
-KomaMRICore.device_name(::ROCBackend) = AMDGPU.HIP.name(AMDGPU.device())
-@inline KomaMRICore._cis(x) = cis(x)
+KomaNYUCore.name(::ROCBackend) = "AMDGPU"
+KomaNYUCore.isfunctional(::ROCBackend) = AMDGPU.functional()
+KomaNYUCore.set_device!(::ROCBackend, dev_idx::Integer) = AMDGPU.device_id!(dev_idx)
+KomaNYUCore.set_device!(::ROCBackend, dev::AMDGPU.HIPDevice) = AMDGPU.device!(dev)
+KomaNYUCore.device_name(::ROCBackend) = AMDGPU.HIP.name(AMDGPU.device())
+@inline KomaNYUCore._cis(x) = cis(x)
 
-function KomaMRICore._print_devices(::ROCBackend)
+function KomaNYUCore._print_devices(::ROCBackend)
     devices = [
         Symbol("($(i-1)$(i == 1 ? "*" : " "))") => AMDGPU.HIP.name(d) for
         (i, d) in enumerate(AMDGPU.devices())
@@ -20,7 +20,7 @@ function KomaMRICore._print_devices(::ROCBackend)
 end
 
 function __init__()
-    push!(KomaMRICore.LOADED_BACKENDS[], ROCBackend())
+    push!(KomaNYUCore.LOADED_BACKENDS[], ROCBackend())
 end
 
 end

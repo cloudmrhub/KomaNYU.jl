@@ -9,22 +9,22 @@
 # will be requested to review.
 # SRC
 src/*.jl    @cncastillo
-KomaMRIBase/src/*.jl    @cncastillo
-KomaMRICore/src/*.jl    @cncastillo
-KomaMRIPlots/src/*.jl    @cncastillo
-KomaMRIFiles/src/*.jl    @cncastillo
+KomaNYUBase/src/*.jl    @cncastillo
+KomaNYUCore/src/*.jl    @cncastillo
+KomaNYUPlots/src/*.jl    @cncastillo
+KomaNYUFiles/src/*.jl    @cncastillo
 # TEST
 test/*.jl    @cncastillo
-KomaMRIBase/test/*.jl    @cncastillo
-KomaMRICore/test/*.jl    @cncastillo
-KomaMRIPlots/test/*.jl    @cncastillo
-KomaMRIFiles/test/*.jl    @cncastillo
+KomaNYUBase/test/*.jl    @cncastillo
+KomaNYUCore/test/*.jl    @cncastillo
+KomaNYUPlots/test/*.jl    @cncastillo
+KomaNYUFiles/test/*.jl    @cncastillo
 # EXT
 ext/*.jl    @cncastillo
-KomaMRIBase/ext/*.jl    @cncastillo
-KomaMRICore/ext/*.jl    @cncastillo
-KomaMRIPlots/ext/*.jl    @cncastillo
-KomaMRIFiles/ext/*.jl    @cncastillo
+KomaNYUBase/ext/*.jl    @cncastillo
+KomaNYUCore/ext/*.jl    @cncastillo
+KomaNYUPlots/ext/*.jl    @cncastillo
+KomaNYUFiles/ext/*.jl    @cncastillo
 
 # You can also use email addresses if you prefer.
 # docs/*  docs@example.com

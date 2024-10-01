@@ -1,6 +1,6 @@
 # # Chemical Shift in an EPI sequence
 
-using KomaMRI # hide
+using KomaNYU # hide
 sys = Scanner() # hide
 
 # For a more realistic example, we will use a brain phantom.
@@ -27,7 +27,7 @@ p2 = plot_phantom_map(obj, :Δw ; height=400, width=400, view_2d=true)
 # for being affected by off-resonance. With this sequence,
 # we will be able visualize the effect of the chemical shift.
 
-seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/5.koma_paper/comparison_accuracy/sequences/EPI/epi_100x100_TE100_FOV230.seq")
+seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/5.koma_paper/comparison_accuracy/sequences/EPI/epi_100x100_TE100_FOV230.seq")
 seq = read_seq(seq_file)
 p3 = plot_seq(seq; range=[0 40], slider=true, height=300)
 #md savefig(p3, "../assets/2-seq.html") # hide

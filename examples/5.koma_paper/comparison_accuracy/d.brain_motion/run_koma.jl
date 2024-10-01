@@ -1,4 +1,4 @@
-using KomaMRI, Suppressor, MAT
+using KomaNYU, Suppressor, MAT
 
 obj = @suppress read_phantom_jemris("../../../2.phantoms/brain.h5")
 obj.uy = (x,y,z,t)-> 0.1f0 * t

@@ -1,6 +1,6 @@
 # Sequence
 
-This section delves into some details about how a sequence is constructed. The sequence definition in **KomaMRI** is strongly related to the [Pulseq](https://pulseq.github.io/index.html) definition. After reading this section, you should be able to create your own **Sequence** structs for conducting custom simulations using the **KomaMRI** package.
+This section delves into some details about how a sequence is constructed. The sequence definition in **KomaNYU** is strongly related to the [Pulseq](https://pulseq.github.io/index.html) definition. After reading this section, you should be able to create your own **Sequence** structs for conducting custom simulations using the **KomaNYU** package.
 
 ## Sequence Overview
 
@@ -23,7 +23,7 @@ A **sequence** can be thought of as an ordered concatenation of blocks over time
 \end{matrix*}
 ```
 
-The best way to understand the **Sequence** struct in **KomaMRI** is by examining the source code where this struct is defined:
+The best way to understand the **Sequence** struct in **KomaNYU** is by examining the source code where this struct is defined:
 ```julia
 mutable struct Sequence
     GR::Array{Grad,2}
@@ -37,7 +37,7 @@ end
 As you can see, a **Sequence** struct contains 5 field names: ''DEF'' contains information for reconstruction steps (so it is not mandatory to fill it), ''DUR'' is a vector that contains the time durations of each block, ''ADC'' is also a vector with the acquisition samples for every block (an vector of **ADC** structs), ''GR'' is a 2D matrix which 3 rows representing the x-y-z gradients and columns having the samples of each block (a matrix of **Grad** structs) and ''RF'' is also a 2D matrix where each row represents a different coil and the columns are for different block samples too (a matrix of **RF** structs). The **RF**, **Grad** and **ADC** are MRI events that will be explained in the section [Events Definitions](2-seq-events.md).
 
 !!! warning
-    So far, **KomaMRI** can only manage one coil for RF excitations. However, in future versions, parallel transmit pTX will be managed by adding more ``rows'' to the RF matrix of the Sequence field name.
+    So far, **KomaNYU** can only manage one coil for RF excitations. However, in future versions, parallel transmit pTX will be managed by adding more ``rows'' to the RF matrix of the Sequence field name.
 
 In order to understand how a **Sequence** struct can be manipulated in **Julia**, let's use the EPI sequence example. You can display basic information of the **Sequence** variable in the **Julia REPL**:
 ```julia-repl

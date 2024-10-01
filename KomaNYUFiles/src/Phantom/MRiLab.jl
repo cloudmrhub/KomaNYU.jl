@@ -11,7 +11,7 @@ Returns the Phantom struct from a MRiLab phantom file `.mat`.
 
 # Examples
 ```julia-repl
-julia> obj_file = joinpath(dirname(pathof(KomaMRI)), "../examples/2.phantoms/brain.mat")
+julia> obj_file = joinpath(dirname(pathof(KomaNYU)), "../examples/2.phantoms/brain.mat")
 
 julia> obj = read_phantom_MRiLab(obj_file)
 

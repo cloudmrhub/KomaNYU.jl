@@ -49,7 +49,7 @@ to fit within the range [0, 1] based on the provided start and end times.
 
 # Examples
 ```julia-repl
-julia> t_unit = KomaMRIBase.unit_time([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], TimeRange(1.0, 4.0))
+julia> t_unit = KomaNYUBase.unit_time([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], TimeRange(1.0, 4.0))
 6-element Vector{Float64}:
  0.0
  0.0
@@ -118,7 +118,7 @@ or normalizing time values in periodic processes.
 
 # Examples
 ```julia-repl
-julia> t_unit = KomaMRIBase.unit_time([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], Periodic(4.0, 0.5))
+julia> t_unit = KomaNYUBase.unit_time([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], Periodic(4.0, 0.5))
 6-element Vector{Float64}:
  0.0
  0.5

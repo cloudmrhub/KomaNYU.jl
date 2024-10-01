@@ -1,7 +1,7 @@
-# KomaMRIFiles
+# KomaNYUFiles
 
 ```@meta
-CurrentModule = KomaMRIFiles
+CurrentModule = KomaNYUFiles
 ```
 
 ## Sequence

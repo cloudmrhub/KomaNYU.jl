@@ -136,7 +136,7 @@ function setup_raw()
             "trajectory" => "other",
         ),
         [
-            KomaMRICore.Profile(
+            KomaNYUCore.Profile(
                 AcquisitionHeader(; trajectory_dimensions=2, sample_time_us=1),
                 [0.0 0.0 1 1; 0 1 1 1] ./ 2,
                 reshape([0.0; 0im; 0; 0], 4, 1),
@@ -240,7 +240,7 @@ Fileficker callback when raw signal is loaded
 function callback_filepicker(filename::String, w::Window, raw::RawAcquisitionData)
     if filename != ""
         raw = RawAcquisitionData(ISMRMRDFile(filename))
-        if raw.params["systemVendor"] != "KomaMRI.jl"
+        if raw.params["systemVendor"] != "KomaNYU.jl"
             @warn "ISMRMRD files generated externally could cause problems during the reconstruction. We are currently improving compatibility."
         end
         @js_ w (

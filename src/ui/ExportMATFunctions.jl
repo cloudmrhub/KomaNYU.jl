@@ -29,11 +29,11 @@ function export_2_mat_kspace(seq, matfolder; matfilename="seq_kspace.mat")
 end
 
 function export_2_mat_moments(seq, matfolder; matfilename="seq_moments.mat")
-    t, Δt = KomaMRIBase.get_variable_times(seq; Δt=1)
+    t, Δt = KomaNYUBase.get_variable_times(seq; Δt=1)
     t = t[1:end-1]
-    k0, _ =  KomaMRIBase.get_kspace(seq; Δt=1)
-    k1, _ =  KomaMRIBase.get_M1(seq; Δt=1)
-    k2, _ =  KomaMRIBase.get_M2(seq; Δt=1)
+    k0, _ =  KomaNYUBase.get_kspace(seq; Δt=1)
+    k1, _ =  KomaNYUBase.get_M1(seq; Δt=1)
+    k2, _ =  KomaNYUBase.get_M2(seq; Δt=1)
     moments = hcat(t, k0, k1, k2)
     matwrite(joinpath(matfolder, matfilename), Dict("moments" => moments))
 end
@@ -75,7 +75,7 @@ function export_2_mat_raw(raw_ismrmrd, matfolder; matfilename="raw.mat");
         end
         matwrite(joinpath(matfolder, "sim_params.mat"), dict_for_mat)
 
-        not_Koma = raw_ismrmrd.params["systemVendor"] != "KomaMRI.jl"
+        not_Koma = raw_ismrmrd.params["systemVendor"] != "KomaNYU.jl"
         t = Float64[]
         signal = ComplexF64[]
         current_t0 = 0

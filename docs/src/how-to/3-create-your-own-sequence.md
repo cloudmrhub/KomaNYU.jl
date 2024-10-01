@@ -7,7 +7,7 @@ This is an example of how to create a **Sequence** struct:
 
 ```julia
 # Export necessary modules
-using KomaMRI
+using KomaNYU
 
 # Create the function that creates a phantom
 function sequence_example(FOV::Real, N::Integer)

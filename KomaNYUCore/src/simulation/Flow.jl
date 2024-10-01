@@ -26,9 +26,9 @@ function outflow_spin_reset!(
     add_t0=false,
 )
    # Initialize time: add t0 and normalize
-   ts = KomaMRIBase.unit_time(init_time(t, seq_t, add_t0), time_span)
+   ts = KomaNYUBase.unit_time(init_time(t, seq_t, add_t0), time_span)
    # Get spin state range affected by the spin span
-   idx = KomaMRIBase.get_indexing_range(spin_span)
+   idx = KomaNYUBase.get_indexing_range(spin_span)
    spin_state_matrix = @view(spin_state_matrix[idx, :])
    replace_by = replace_view(replace_by, idx)
    # Obtain mask
@@ -50,9 +50,9 @@ function outflow_spin_reset!(
     add_t0=false,
 )
    # Initialize time: add t0 and normalize
-   ts = KomaMRIBase.unit_time(init_time(t, seq_t, add_t0), time_span)
+   ts = KomaNYUBase.unit_time(init_time(t, seq_t, add_t0), time_span)
    # Get spin state range affected by the spin span
-   idx = KomaMRIBase.get_indexing_range(spin_span)
+   idx = KomaNYUBase.get_indexing_range(spin_span)
    M = @view(M[idx])
    replace_by = replace_view(replace_by, idx)
    # Obtain mask
@@ -82,12 +82,12 @@ function replace_view(replace_by, idx)
 end
 
 function get_mask(spin_reset, t::Real)
-   itp  = KomaMRIBase.interpolate(spin_reset, KomaMRIBase.Gridded(KomaMRIBase.Constant{KomaMRIBase.Previous}()), Val(size(spin_reset, 1)), t)
-   return KomaMRIBase.resample(itp, t)
+   itp  = KomaNYUBase.interpolate(spin_reset, KomaNYUBase.Gridded(KomaNYUBase.Constant{KomaNYUBase.Previous}()), Val(size(spin_reset, 1)), t)
+   return KomaNYUBase.resample(itp, t)
 end
 function get_mask(spin_reset, t::AbstractArray)
-   itp  = KomaMRIBase.interpolate(spin_reset, KomaMRIBase.Gridded(KomaMRIBase.Constant{KomaMRIBase.Previous}()), Val(size(spin_reset, 1)), t)
-   mask = KomaMRIBase.resample(itp, t)
+   itp  = KomaNYUBase.interpolate(spin_reset, KomaNYUBase.Gridded(KomaNYUBase.Constant{KomaNYUBase.Previous}()), Val(size(spin_reset, 1)), t)
+   mask = KomaNYUBase.resample(itp, t)
    mask .= (cumsum(mask; dims=2) .== 1)
    return mask
 end

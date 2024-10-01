@@ -54,18 +54,18 @@ flags:
   base:
     carryforward: true
     paths:
-      - KomaMRIBase/src/.*
+      - KomaNYUBase/src/.*
   core:
     carryforward: true
     paths:
-      - KomaMRICore/src/.*
-      - KomaMRICore/ext/.*
+      - KomaNYUCore/src/.*
+      - KomaNYUCore/ext/.*
   files:
     carryforward: true
     paths:
-      - KomaMRIFiles/src/.*
+      - KomaNYUFiles/src/.*
   plots:
     carryforward: true
     paths:
-      - KomaMRIPlots/src/.*
-      - KomaMRIPlots/ext/.*
+      - KomaNYUPlots/src/.*
+      - KomaNYUPlots/ext/.*

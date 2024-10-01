@@ -2,7 +2,7 @@
 
 # > Based on the results in page 41 of the book "Handbook of MRI Pulse Sequences" by Bernstein et al.
 
-using KomaMRI # hide
+using KomaNYU # hide
 sys = Scanner() # hide
 sys.Smax = 50 # hide
 
@@ -47,7 +47,7 @@ N_pad = length(dat_pad) # hide
 U = 1 / (Trf) * N / N_pad #hide
 u = range(0, (N_pad - 1) * U; step=U) # hide
 u = u .- maximum(u) / 2 .- U/2 # hide
-FT_dat_pad = abs.(KomaMRI.fftc(dat_pad; dims=1)) # hide
+FT_dat_pad = abs.(KomaNYU.fftc(dat_pad; dims=1)) # hide
 scale_factor = maximum(abs.(M.xy)) / maximum(FT_dat_pad) # hide
 s3 = scatter(x=u, y=FT_dat_pad*scale_factor, name="|FT(B₁(t))|", line=attr(dash="dash")) # hide
 pb = plot([s1,s2,s3], Layout(title="30 deg SINC pulse (TBP=8, Hamming)", xaxis_title="Frequency [Hz]", xaxis_range=[-fmax,fmax])) # hide
@@ -78,7 +78,7 @@ N_pad = length(dat_pad) # hide
 U = 1 / (Trf) * N / N_pad #hide
 u = range(0, (N_pad - 1) * U; step=U) # hide
 u = u .- maximum(u) / 2 .- U/2 # hide
-FT_dat_pad = abs.(KomaMRI.fftc(dat_pad; dims=1)) # hide
+FT_dat_pad = abs.(KomaNYU.fftc(dat_pad; dims=1)) # hide
 scale_factor = maximum(abs.(M.xy)) / maximum(FT_dat_pad) # hide
 s2 = scatter(x=u, y=FT_dat_pad*scale_factor, name="|FT(B₁(t))|", line=attr(dash="dash")) # hide
 pa = plot([s1,s2], Layout(title="120 deg SINC pulse (TBP=8, Hamming)", xaxis_title="Frequency [Hz]", xaxis_range=[-fmax,fmax])) # hide

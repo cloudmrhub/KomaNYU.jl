@@ -159,7 +159,7 @@ Plots a sequence struct.
 
 # Examples
 ```julia-repl
-julia> seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/1.sequences/spiral.seq")
+julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/1.sequences/spiral.seq")
 
 julia> seq = read_seq(seq_file)
 
@@ -359,7 +359,7 @@ Plots the zero order moment (M0) of a Sequence struct.
 
 # Examples
 ```julia-repl
-julia> seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/1.sequences/spiral.seq")
+julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/1.sequences/spiral.seq")
 
 julia> seq = read_seq(seq_file)
 
@@ -378,13 +378,13 @@ function plot_M0(
     skip_rf=zeros(Bool, sum(is_RF_on.(seq))),
 )
     #Times
-    t, Δt = KomaMRIBase.get_variable_times(seq; Δt=1)
+    t, Δt = KomaNYUBase.get_variable_times(seq; Δt=1)
     t = t[1:(end - 1)]
     T0 = get_block_start_times(seq)
     #M0
     ts = t .+ Δt
-    rf_idx, rf_type = KomaMRIBase.get_RF_types(seq, t)
-    k, _ = KomaMRIBase.get_kspace(seq; Δt=1, skip_rf)
+    rf_idx, rf_type = KomaNYUBase.get_RF_types(seq, t)
+    k, _ = KomaNYUBase.get_kspace(seq; Δt=1, skip_rf)
     #plots M0
     p = [scatter() for j in 1:4]
     p[1] = scatter(;
@@ -448,7 +448,7 @@ Plots the first order moment (M1) of a Sequence struct.
 
 # Examples
 ```julia-repl
-julia> seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/1.sequences/spiral.seq")
+julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/1.sequences/spiral.seq")
 
 julia> seq = read_seq(seq_file)
 
@@ -467,13 +467,13 @@ function plot_M1(
     skip_rf=zeros(Bool, sum(is_RF_on.(seq))),
 )
     #Times
-    t, Δt = KomaMRIBase.get_variable_times(seq; Δt=1)
+    t, Δt = KomaNYUBase.get_variable_times(seq; Δt=1)
     t = t[1:(end - 1)]
     T0 = get_block_start_times(seq)
     #M1
     ts = t .+ Δt
-    rf_idx, rf_type = KomaMRIBase.get_RF_types(seq, t)
-    k, _ = KomaMRIBase.get_M1(seq; Δt=1, skip_rf)
+    rf_idx, rf_type = KomaNYUBase.get_RF_types(seq, t)
+    k, _ = KomaNYUBase.get_M1(seq; Δt=1, skip_rf)
     #plots M1
     p = [scatter() for j in 1:4]
     p[1] = scatter(;
@@ -537,7 +537,7 @@ Plots the second order moment (M2) of a Sequence struct.
 
 # Examples
 ```julia-repl
-julia> seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/1.sequences/spiral.seq")
+julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/1.sequences/spiral.seq")
 
 julia> seq = read_seq(seq_file)
 
@@ -555,13 +555,13 @@ function plot_M2(
     title="",
 )
     #Times
-    t, Δt = KomaMRIBase.get_variable_times(seq; Δt=1)
+    t, Δt = KomaNYUBase.get_variable_times(seq; Δt=1)
     t = t[1:(end - 1)]
     T0 = get_block_start_times(seq)
     #M2
     ts = t .+ Δt
-    rf_idx, rf_type = KomaMRIBase.get_RF_types(seq, t)
-    k, _ = KomaMRIBase.get_M2(seq; Δt=1)
+    rf_idx, rf_type = KomaNYUBase.get_RF_types(seq, t)
+    k, _ = KomaNYUBase.get_M2(seq; Δt=1)
     #Plor M2
     p = [scatter() for j in 1:4]
     p[1] = scatter(;
@@ -627,7 +627,7 @@ Plots the eddy currents of a Sequence struct.
 
 # Examples
 ```julia-repl
-julia> seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/1.sequences/spiral.seq")
+julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/1.sequences/spiral.seq")
 
 julia> seq = read_seq(seq_file)
 
@@ -647,14 +647,14 @@ function plot_eddy_currents(
     title="",
 )
     #Times
-    t, Δt = KomaMRIBase.get_variable_times(seq + ADC(100, 100e-3); Δt=1)
+    t, Δt = KomaNYUBase.get_variable_times(seq + ADC(100, 100e-3); Δt=1)
     t = t[2:end]
     T0 = get_block_start_times(seq)
-    Gx, Gy, Gz = KomaMRIBase.get_grads(seq, t)
+    Gx, Gy, Gz = KomaNYUBase.get_grads(seq, t)
     #Eddy currents per lambda
     Gec = zeros(length(t), 3)
     for (i, l) in enumerate(λ)
-        aux, _ = KomaMRIBase.get_eddy_currents(seq + ADC(100, 100e-3); Δt=1, λ=l)
+        aux, _ = KomaNYUBase.get_eddy_currents(seq + ADC(100, 100e-3); Δt=1, λ=l)
         Gec .+= α[i] .* aux
     end
     #Plot eddy currents
@@ -712,7 +712,7 @@ Plots the slew rate currents of a Sequence struct.
 
 # Examples
 ```julia-repl
-julia> seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/1.sequences/spiral.seq")
+julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/1.sequences/spiral.seq")
 
 julia> seq = read_seq(seq_file)
 
@@ -730,12 +730,12 @@ function plot_slew_rate(
     title="",
 )
     #Times
-    t, Δt = KomaMRIBase.get_variable_times(seq; Δt=1)
+    t, Δt = KomaNYUBase.get_variable_times(seq; Δt=1)
     t = t[1:(end - 1)]
     T0 = get_block_start_times(seq)
     ts = t .+ Δt
     #Eddy currents per lambda
-    k, _ = KomaMRIBase.get_slew_rate(seq; Δt=1)
+    k, _ = KomaNYUBase.get_slew_rate(seq; Δt=1)
     #Plot eddy currents
     p = [scatter() for j in 1:4]
     p[1] = scatter(;
@@ -863,7 +863,7 @@ Plots the k-space of a Sequence struct.
 
 # Examples
 ```julia-repl
-julia> seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/1.sequences/spiral.seq")
+julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/1.sequences/spiral.seq")
 
 julia> seq = read_seq(seq_file)
 
@@ -874,7 +874,7 @@ function plot_kspace(seq::Sequence; width=nothing, height=nothing, darkmode=fals
     bgcolor, text_color, plot_bgcolor, grid_color, sep_color = theme_chooser(darkmode)
     #Calculations of theoretical k-space
     kspace, kspace_adc = get_kspace(seq; Δt=1) #sim_params["Δt"])
-    t_adc = KomaMRIBase.get_adc_sampling_times(seq)
+    t_adc = KomaNYUBase.get_adc_sampling_times(seq)
     #Colormap
     c_map = [[t, "hsv($(floor(Int,(1-t)*255)), 100, 50)"] for t in range(0, 1; length=10)] # range(s,b,N) only works in Julia 1.7.3
     c = "gray"
@@ -1028,7 +1028,7 @@ function plot_phantom_map(
     height=700,
     width=nothing,
     darkmode=false,
-    view_2d=sum(KomaMRIBase.get_dims(obj)) < 3,
+    view_2d=sum(KomaNYUBase.get_dims(obj)) < 3,
     colorbar=true,
     max_spins=20_000,
     time_samples=0,
@@ -1046,7 +1046,7 @@ function plot_phantom_map(
     end
 
     function process_times(motion)
-        KomaMRIBase.sort_motions!(motion)
+        KomaNYUBase.sort_motions!(motion)
         t = interpolate_times(motion)
         # Decimate time points so their number is smaller than max_time_samples
         ss = length(t) > max_time_samples ? length(t) ÷ max_time_samples : 1
@@ -1288,7 +1288,7 @@ Plots a raw signal in ISMRMRD format.
 
 # Examples
 ```julia-repl
-julia> seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/5.koma_paper/comparison_accuracy/sequences/EPI/epi_100x100_TE100_FOV230.seq");
+julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/5.koma_paper/comparison_accuracy/sequences/EPI/epi_100x100_TE100_FOV230.seq");
 
 julia> sys, obj, seq = Scanner(), brain_phantom2D(), read_seq(seq_file)
 
@@ -1307,7 +1307,7 @@ function plot_signal(
     range=[],
     gl=false,
 )
-    not_Koma = raw.params["systemVendor"] != "KomaMRI.jl"
+    not_Koma = raw.params["systemVendor"] != "KomaNYU.jl"
     t = []
     signal = []
     current_t0 = 0
@@ -1481,7 +1481,7 @@ function plot_dict(dict::Dict)
 end
 
 """
-    p = plot_seqd(seq::Sequence; sampling_params=KomaMRIBase.default_sampling_params())
+    p = plot_seqd(seq::Sequence; sampling_params=KomaNYUBase.default_sampling_params())
 
 Plots a sampled sequence struct.
 
@@ -1489,7 +1489,7 @@ Plots a sampled sequence struct.
 - `seq`: (`::Sequence`) Sequence struct
 
 # Keywords
-- `sampling_params`: (`::Dict{String,Any}()`, `=KomaMRIBase.default_sampling_params()`) dictionary of
+- `sampling_params`: (`::Dict{String,Any}()`, `=KomaNYUBase.default_sampling_params()`) dictionary of
     sampling parameters
 
 # Returns
@@ -1497,15 +1497,15 @@ Plots a sampled sequence struct.
 
 # Examples
 ```julia-repl
-julia> seq_file = joinpath(dirname(pathof(KomaMRI)), "../examples/1.sequences/spiral.seq")
+julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/1.sequences/spiral.seq")
 
 julia> seq = read_seq(seq_file)
 
 julia> plot_seqd(seq)
 ```
 """
-function plot_seqd(seq::Sequence; sampling_params=KomaMRIBase.default_sampling_params())
-    seqd = KomaMRIBase.discretize(seq; sampling_params)
+function plot_seqd(seq::Sequence; sampling_params=KomaNYUBase.default_sampling_params())
+    seqd = KomaNYUBase.discretize(seq; sampling_params)
     Gx = scattergl(;
         x=seqd.t * 1e3,
         y=seqd.Gx * 1e3,

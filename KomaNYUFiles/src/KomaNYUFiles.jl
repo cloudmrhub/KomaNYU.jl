@@ -1,6 +1,6 @@
-module KomaMRIFiles
+module KomaNYUFiles
 
-using KomaMRIBase
+using KomaNYUBase
 using Scanf, FileIO, HDF5, MAT, InteractiveUtils # IO related
 using Reexport
 using MRIFiles
@@ -16,4 +16,4 @@ include("Phantom/Phantom.jl")
 export read_seq                                                                     # Pulseq
 export read_phantom_jemris, read_phantom_MRiLab, read_phantom, write_phantom        # Phantom
 
-end # module KomaMRIFiles
+end # module KomaNYUFiles

@@ -16,8 +16,8 @@ steps:
           julia --project=benchmarks -e 'println("--- :julia: Instantiating project")
               using Pkg
               Pkg.develop([
-                  PackageSpec(path=pwd(), subdir="KomaMRIBase"),
-                  PackageSpec(path=pwd(), subdir="KomaMRICore"),
+                  PackageSpec(path=pwd(), subdir="KomaNYUBase"),
+                  PackageSpec(path=pwd(), subdir="KomaNYUCore"),
               ])'
           
           julia --project=benchmarks -e 'println("--- :julia: Run Benchmarks")
@@ -39,8 +39,8 @@ steps:
           julia --project=benchmarks -e 'println("--- :julia: Instantiating project")
               using Pkg
               Pkg.develop([
-                  PackageSpec(path=pwd(), subdir="KomaMRIBase"),
-                  PackageSpec(path=pwd(), subdir="KomaMRICore"),
+                  PackageSpec(path=pwd(), subdir="KomaNYUBase"),
+                  PackageSpec(path=pwd(), subdir="KomaNYUCore"),
               ])'
 
           julia --project=benchmarks -e 'println("---:julia: Add AMDGPU to benchmarks environment")
@@ -67,8 +67,8 @@ steps:
           julia --project=benchmarks -e 'println("--- :julia: Instantiating project")
               using Pkg
               Pkg.develop([
-                  PackageSpec(path=pwd(), subdir="KomaMRIBase"),
-                  PackageSpec(path=pwd(), subdir="KomaMRICore"),
+                  PackageSpec(path=pwd(), subdir="KomaNYUBase"),
+                  PackageSpec(path=pwd(), subdir="KomaNYUCore"),
               ])'
 
           julia --project=benchmarks -e 'println("---:julia: Add CUDA to benchmarks environment")
@@ -95,8 +95,8 @@ steps:
           julia --project=benchmarks -e 'println("--- :julia: Instantiating project")
               using Pkg
               Pkg.develop([
-                  PackageSpec(path=pwd(), subdir="KomaMRIBase"),
-                  PackageSpec(path=pwd(), subdir="KomaMRICore"),
+                  PackageSpec(path=pwd(), subdir="KomaNYUBase"),
+                  PackageSpec(path=pwd(), subdir="KomaNYUCore"),
               ])'
 
           julia --project=benchmarks -e 'println("---:julia: Add Metal to benchmarks environment")
@@ -123,8 +123,8 @@ steps:
           julia --project=benchmarks -e 'println("--- :julia: Instantiating project")
               using Pkg
               Pkg.develop([
-                  PackageSpec(path=pwd(), subdir="KomaMRIBase"),
-                  PackageSpec(path=pwd(), subdir="KomaMRICore"),
+                  PackageSpec(path=pwd(), subdir="KomaNYUBase"),
+                  PackageSpec(path=pwd(), subdir="KomaNYUCore"),
               ])'
 
           julia --project=benchmarks -e 'println("---:julia: Add CUDA to benchmarks environment")

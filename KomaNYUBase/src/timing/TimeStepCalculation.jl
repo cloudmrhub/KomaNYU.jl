@@ -74,12 +74,12 @@ This function returns non-uniform time points that are relevant in the sequence 
 # Keywords
 - `Δt`: (`::Real`, `=1e-3`, `[s]`) nominal delta time separation between two time samples
     for ADC acquisition and Gradients (by nominal we mean that the time separation should be
-    at most `Δt` when the samples are regarded by [`KomaMRI.is_ADC_on`](@ref) or
-    [`KomaMRI.is_GR_on`](@ref)), otherwise the time points are not necessary and the
+    at most `Δt` when the samples are regarded by [`KomaNYU.is_ADC_on`](@ref) or
+    [`KomaNYU.is_GR_on`](@ref)), otherwise the time points are not necessary and the
     separation will be bigger)
 - `Δt_rf`: (`::Real`, `=1e-5`, `[s]`) nominal delta time separation between two time
     samples for RF excitation (by nominal we mean that the time separation should be at most
-    `Δt_rf` when the samples are regarded by [`KomaMRI.is_RF_on`](@ref), otherwise the time
+    `Δt_rf` when the samples are regarded by [`KomaNYU.is_RF_on`](@ref), otherwise the time
     points are not necessary and the separation will be bigger)
 
 # Returns

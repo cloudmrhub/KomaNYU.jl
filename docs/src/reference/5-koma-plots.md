@@ -1,7 +1,7 @@
-# KomaMRIPlots
+# KomaNYUPlots
 
 ```@meta
-CurrentModule = KomaMRIPlots
+CurrentModule = KomaNYUPlots
 ```
 
 ## Plotting `Phantom`

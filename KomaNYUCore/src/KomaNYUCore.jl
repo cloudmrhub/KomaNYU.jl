@@ -1,4 +1,4 @@
-module KomaMRICore 
+module KomaNYUCore 
 
 # General
 import Base.*, Base.abs
@@ -8,8 +8,8 @@ using ThreadsX
 # Printing
 using ProgressMeter
 
-# KomaMRIBase
-@reexport using KomaMRIBase
+# KomaNYUBase
+@reexport using KomaNYUBase
 
 # Rawdata
 include("rawdata/ISMRMRD.jl")

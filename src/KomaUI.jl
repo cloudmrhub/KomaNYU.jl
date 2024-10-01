@@ -62,7 +62,7 @@ function KomaUI(; darkmode=true, frame=true, phantom_mode="2D", sim=Dict{String,
 
     # Print gpu information
     if !(haskey(sim_params, "gpu") && sim_params["gpu"] == false)
-        KomaMRICore.print_devices()
+        KomaNYUCore.print_devices()
     end
 
     # Boleans to indicate first time for precompilation
@@ -291,21 +291,21 @@ function KomaUI(; darkmode=true, frame=true, phantom_mode="2D", sim=Dict{String,
 
     # Update Koma versions to tooltip
     version_ui    = string(pkgversion(@__MODULE__))
-    version_core  = string(pkgversion(KomaMRICore))
-    version_io    = string(pkgversion(KomaMRIFiles))
-    version_plots = string(pkgversion(KomaMRIPlots))
+    version_core  = string(pkgversion(KomaNYUCore))
+    version_io    = string(pkgversion(KomaNYUFiles))
+    version_plots = string(pkgversion(KomaNYUPlots))
     @js_ w (
         @var version_ui    = $(version_ui);
         @var version_core  = $(version_core);
         @var version_io    = $(version_io);
         @var version_plots = $(version_plots);
         document.getElementById("Github").setAttribute("data-bs-original-title",
-                                                         "KomaMRI.jl v"+version_ui+"\n"+
-                                                         "KomaMRICore.jl v"+version_core+"\n"+
-                                                         "KomaMRIFiles.jl v"+version_io+"\n"+
-                                                         "KomaMRIPlots.jl v"+version_plots);
+                                                         "KomaNYU.jl v"+version_ui+"\n"+
+                                                         "KomaNYUCore.jl v"+version_core+"\n"+
+                                                         "KomaNYUFiles.jl v"+version_io+"\n"+
+                                                         "KomaNYUPlots.jl v"+version_plots);
     )
-    @info "Currently using package versions" KomaMRI=version_ui KomaMRICore=version_core KomaMRIFiles=version_io KomaMRIPlots=version_plots
+    @info "Currently using package versions" KomaNYU=version_ui KomaNYUCore=version_core KomaNYUFiles=version_io KomaNYUPlots=version_plots
 
     # Devtools
     if return_window

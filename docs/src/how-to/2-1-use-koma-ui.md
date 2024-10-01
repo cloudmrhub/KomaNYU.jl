@@ -1,6 +1,6 @@
 # Use Koma's User Interface
 
-This section provides a comprehensive guide on using the **User Interface** of the **KomaMRI** package and delves into the internal processes that occur during interaction. By the end of this section, you will be equipped to execute a complete workflow even without any prior programming experience.
+This section provides a comprehensive guide on using the **User Interface** of the **KomaNYU** package and delves into the internal processes that occur during interaction. By the end of this section, you will be equipped to execute a complete workflow even without any prior programming experience.
 
 ```@raw html
 <p align="center"><img width="90%" src="../../assets/ui-simulation.gif"/></p>
@@ -10,15 +10,15 @@ This section provides a comprehensive guide on using the **User Interface** of t
 ## Basic Workflow
 (You can also go to [analog steps using Scripts](2-3-use-koma-scripts.md#Basic-Workflow))
 
-As a general overview, remember the following workflow steps when using KomaMRI:
+As a general overview, remember the following workflow steps when using KomaNYU:
 
 * Loading Simulation Inputs: **Scanner**, **Phantom**, **Sequence**
 * Running Simulation
 * Reconstructing Image using **MRIReco**
 
-In the following subsections, we will cover all the mentioned steps. First, open the **Julia REPL** and enter the following commands to include the **KomaMRI** package and launch the user interface:
+In the following subsections, we will cover all the mentioned steps. First, open the **Julia REPL** and enter the following commands to include the **KomaNYU** package and launch the user interface:
 ```julia-repl
-julia> using KomaMRI
+julia> using KomaNYU
 
 julia> KomaUI()
 ```
@@ -45,7 +45,7 @@ To see the phantom already stored in RAM, simply click on the `Phantom` dropdown
 <p align="center"><img width="90%" src="../../assets/gui-phantom-view.png"/></p>
 ```
 
-It is also possible to load `.h5` phantom files. The **KomaMRI.jl** has some examples stored at `~/.julia/packages/KomaMRI/<id-string>/examples/2.phantoms/`. For instance, let's load the `sphere_chemical_shift.h5` file:
+It is also possible to load `.h5` phantom files. The **KomaNYU.jl** has some examples stored at `~/.julia/packages/KomaNYU/<id-string>/examples/2.phantoms/`. For instance, let's load the `sphere_chemical_shift.h5` file:
 ```@raw html
 <p align="center"><img width="90%" src="../../assets/gui-phantom-load.png"/></p>
 ```
@@ -68,7 +68,7 @@ For visualization of the sequence in the k-space, click on the `Sequence` dropdo
 
 You can also display the `Moments` related to the **Sequence** by pressing the `View Moments` and then pressing the buttons for zero, first and second moments.
 
-It is also possible to load **Pulseq** compatible `.seq` sequence files. The **KomaMRI** has some examples stored at `~/.julia/packages/KomaMRI/<id-string>/examples/1.sequences/`. For instance, let's load the `spiral.seq` file and view it the time domain and k-space:
+It is also possible to load **Pulseq** compatible `.seq` sequence files. The **KomaNYU** has some examples stored at `~/.julia/packages/KomaNYU/<id-string>/examples/1.sequences/`. For instance, let's load the `spiral.seq` file and view it the time domain and k-space:
 ```@raw html
 <p align="center"><img width="90%" src="../../assets/gui-seq-time-load.png"/></p>
 ```
@@ -136,7 +136,7 @@ So far, and due to limitations of the user interface dependencies, the `.mat` fi
 
 ## REPL and UI communication
 
-An amazing feature of **KomaMRI** is that it allows you to modify certain variables in the **Julia REPL**, and then the user interface automatically updates its plots in real-time:
+An amazing feature of **KomaNYU** is that it allows you to modify certain variables in the **Julia REPL**, and then the user interface automatically updates its plots in real-time:
 
 ```@raw html
 <p align="center"><img width="90%" src="../../assets/ui-observables.gif"/></p>

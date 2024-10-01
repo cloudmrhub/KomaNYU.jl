@@ -23,11 +23,11 @@ steps:
           interpolation: false
           watch:
             - path:
-                - "KomaMRICore/src/**/*"
-                - "KomaMRICore/ext/**/*"
-                - "KomaMRICore/Project.toml"
-                - "KomaMRIBase/src/**/*"
-                - "KomaMRIBase/Project.toml"
+                - "KomaNYUCore/src/**/*"
+                - "KomaNYUCore/ext/**/*"
+                - "KomaNYUCore/Project.toml"
+                - "KomaNYUBase/src/**/*"
+                - "KomaNYUBase/Project.toml"
                 - "benchmarks/**/*"
                 - ".buildkite/**/*"
                 - ".github/workflows/Benchmark.yml"

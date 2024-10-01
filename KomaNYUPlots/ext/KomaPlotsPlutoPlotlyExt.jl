@@ -1,12 +1,12 @@
 module KomaPlotsPlutoPlotlyExt
 
-    using KomaMRIPlots 
-    import KomaMRIPlots: _plutoplotly_plot, savefig
+    using KomaNYUPlots 
+    import KomaNYUPlots: _plutoplotly_plot, savefig
     using PlutoPlotly
 
     function __init__()
-        KomaMRIPlots.PLUTOPLOTLY_LOADED[] = true
-        KomaMRIPlots.plot_backend!("PlutoPlotly") 
+        KomaNYUPlots.PLUTOPLOTLY_LOADED[] = true
+        KomaNYUPlots.plot_backend!("PlutoPlotly") 
     end
 
     # Define plot

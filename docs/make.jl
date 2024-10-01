@@ -1,13 +1,13 @@
-using Documenter, Literate, KomaMRI, PlutoSliderServer
+using Documenter, Literate, KomaNYU, PlutoSliderServer
 
 # Setup for Literate and Pluto
-repo_base = "JuliaHealth/KomaMRI.jl"
+repo_base = "JuliaHealth/KomaNYU.jl"
 repo_root_url = "https://github.com/$repo_base/blob/master"
 lit_pattern = "lit-"
 plu_pattern = "pluto-"
 include("utils.jl")
 
-# Documentation folders KomaMRI.jl/docs/
+# Documentation folders KomaNYU.jl/docs/
 doc_tutorial       = joinpath(dirname(@__DIR__), "docs/src/tutorial")
 doc_tutorial_rep   = joinpath(dirname(@__DIR__), "docs/src/tutorial-pluto")
 doc_howto          = joinpath(dirname(@__DIR__), "docs/src/how-to")
@@ -19,7 +19,7 @@ doc_assets         = joinpath(dirname(@__DIR__), "docs/src/assets")
 koma_tutorials_lit = joinpath(dirname(@__DIR__), "examples/3.tutorials")
 koma_tutorials_plu = joinpath(dirname(@__DIR__), "examples/4.reproducible_notebooks")
 
-# Copying files from KomaMRI.jl/ to the documentation folder KomaMRI.jl/docs/
+# Copying files from KomaNYU.jl/ to the documentation folder KomaNYU.jl/docs/
 # Assets
 cp(joinpath(koma_assets, "logo.svg"), joinpath(doc_assets, "logo.svg"); force=true)
 cp(joinpath(koma_assets, "logo-dark.svg"), joinpath(doc_assets, "logo-dark.svg"); force=true)
@@ -46,8 +46,8 @@ append!(reference_list, lit_reference_list)
 
 # Generate documentation
 makedocs(;
-    modules=[KomaMRI, KomaMRIBase, KomaMRICore, KomaMRIFiles, KomaMRIPlots],
-    sitename="KomaMRI.jl",
+    modules=[KomaNYU, KomaNYUBase, KomaNYUCore, KomaNYUFiles, KomaNYUPlots],
+    sitename="KomaNYU.jl",
     authors="Carlos Castillo Passi and collaborators",
     checkdocs=:exports,
     pages=[
@@ -68,6 +68,6 @@ makedocs(;
     clean=false,
 )
 deploydocs(;
-    repo="github.com/JuliaHealth/KomaMRI.jl.git", 
+    repo="github.com/JuliaHealth/KomaNYU.jl.git", 
     push_preview=!isempty(ARGS) ? ARGS[1]=="push_preview" : false,
 )
