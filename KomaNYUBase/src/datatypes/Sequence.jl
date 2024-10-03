@@ -26,7 +26,7 @@ block. This struct serves as an input for the simulation.
 - `seq`: (`::Sequence`) Sequence struct
 """
 mutable struct Sequence
-	GR::Array{Grad,2}		  #Sequence in (X, Y and Z) and time
+	GR::Array{<:Grad,2}		  #Sequence in (X, Y and Z) and time
 	RF::Array{RF,2}			  #RF pulses in coil and time
 	ADC::Array{ADC,1}		  #ADC in time
 	DUR::Vector				  #Duration of each block, this enables delays after RF pulses to satisfy ring-down times
@@ -46,30 +46,17 @@ mutable struct Sequence
 end
 
 # Main Constructors
-function Sequence(GR)
-    rf = reshape([RF(0.0, 0.0) for i in 1:size(GR, 2)], 1, :)
-    adc = [ADC(0, 0.0) for _ = 1:size(GR, 2)]
-    return Sequence(GR, rf, adc, GR.dur, Dict{String, Any}())
-end
-function Sequence(GR, RF)
-    adc = [ADC(0, 0.0) for _ in 1:size(GR, 2)]
-    DUR = maximum([GR.dur RF.dur], dims=2)[:]
-	return Sequence(GR, RF, adc, DUR, Dict{String, Any}())
-end
-function Sequence(GR, RF, ADC)
-    DUR = maximum([GR.dur RF.dur ADC.dur], dims=2)[:]
-	return Sequence(GR, RF, ADC, DUR, Dict{String, Any}())
-end
-function Sequence(GR, RF, ADC, DUR)
-    return Sequence(GR, RF, ADC, DUR, Dict{String, Any}())
-end
+Sequence(GR) = Sequence(GR,fill(RF(0.0, 0.0),1,size(GR,2)))
+Sequence(GR, RF) = Sequence(GR,RF,fill(ADC(0, 0.0),size(GR, 2)))
+Sequence(GR, RF, ADC) = Sequence(GR,RF,ADC,reshape(maximum([GR.dur RF.dur ADC.dur], dims=2),:))
+Sequence(GR, RF, ADC, DUR) = Sequence(GR, RF, ADC, DUR, Dict{String, Any}())
 
 # Other constructors
-Sequence(GR::Array{Grad,1}) = Sequence(reshape(GR,1,:))
-Sequence(GR::Array{Grad,1}, RF::Array{RF,1})= Sequence(reshape(GR, :, 1), reshape(RF, 1, :), [ADC(0, 0.0) for i in 1:size(GR, 2)])
-Sequence(GR::Array{Grad,1}, RF::Array{RF,1}, A::ADC, DUR, DEF) = Sequence(reshape(GR, :, 1), reshape(RF, 1, :), [A], Float64[DUR], DEF)
+Sequence(GR::Vector{<:Grad}) = Sequence(reshape(GR,1,:))
+Sequence(GR::Vector{<:Grad}, RF::Vector{RF}) = Sequence(reshape(GR, :, 1), reshape(RF, 1, :), [ADC(0, 0.0) for i in 1:size(GR, 2)])
+Sequence(GR::Vector{<:Grad}, RF::Vector{RF}, A::ADC, DUR, DEF) = Sequence(reshape(GR, :, 1), reshape(RF, 1, :), [A], Float64[DUR], DEF)
 Sequence() = Sequence(
-    Matrix{Grad}(undef, 3, 0),
+    Matrix{Grad{Float64}}(undef, 3, 0),
     Matrix{RF}(undef, 1, 0),
     Vector{ADC}(undef, 0),
     Vector{Float64}(undef, 0),
@@ -91,8 +78,8 @@ Base.show(io::IO, s::Sequence) = begin
 	compact = get(io, :compact, false)
     if length(s) > 0
         if !compact
-            nGRs = sum(is_Gx_on.(s)) + sum(is_Gy_on.(s)) + sum(is_Gz_on.(s))
-            print(io, "Sequence[ τ = $(round(dur(s)*1e3;digits=3)) ms | blocks: $(length(s)) | ADC: $(sum(is_ADC_on.(s))) | GR: $nGRs | RF: $(sum(is_RF_on.(s))) | DEF: $(length(s.DEF)) ]")
+            nGRs = sum(is_Gx_on,s) + sum(is_Gy_on,s) + sum(is_Gz_on,s)
+            print(io, "Sequence[ τ = $(round(dur(s)*1e3;digits=3)) ms | blocks: $(length(s)) | ADC: $(sum(is_ADC_on,s)) | GR: $nGRs | RF: $(sum(is_RF_on,s)) | DEF: $(length(s.DEF)) ]")
         else
             print(io, "Sequence[τ = $(round(dur(s)*1e3;digits=3)) ms]")
         end
@@ -151,7 +138,7 @@ Tells if the sequence `seq` has elements with ADC active, or active during time 
 # Returns
 - `y`: (`::Bool`) boolean that tells whether or not the ADC in the sequence is active
 """
-is_ADC_on(x::Sequence) = any(x-> x > 0, x.ADC.N)
+is_ADC_on(x::Sequence) = any(>(0), x.ADC.N)
 is_ADC_on(x::Sequence, t::AbstractVecOrMat) = begin
 	N = length(x)
 	ts = get_block_start_times(x)[1:end-1]
@@ -163,7 +150,7 @@ is_ADC_on(x::Sequence, t::AbstractVecOrMat) = begin
 	# |___∿  |
 	#     △
 	#     Here
-	activeADC = any([is_ADC_on(x[i]) && any(t0s[i] .<= t .< tfs[i]) for i=1:N])
+	activeADC = any(is_ADC_on(x[i]) && any(t0s[i] .<= t .< tfs[i]) for i=1:N)
 	activeADC
 end
 
@@ -180,8 +167,8 @@ Tells if the sequence `seq` has elements with RF active, or active during time `
 # Returns
 - `y`: (`::Bool`) boolean that tells whether or not the RF in the sequence is active
 """
-is_RF_on(x::Sequence) = any([sum(abs.(r.A)) for r = x.RF] .> 0)
-is_RF_on(x::Sequence, t::AbstractVector) = begin
+is_RF_on(x::Sequence) = any(any(!iszero,r.A) for r in x.RF)
+function is_RF_on(x::Sequence, t::AbstractVector)
 	N = length(x)
 	ts = get_block_start_times(x)[1:end-1]
 	delays = x.RF.delay
@@ -192,7 +179,7 @@ is_RF_on(x::Sequence, t::AbstractVector) = begin
 	# |___∿  |
 	#     △
 	#     Here
-	activeRFs = any([is_RF_on(x[i]) && any(t0s[i] .<= t .<= tfs[i]) for i=1:N])
+	activeRFs = any(is_RF_on(x[i]) && any(t0s[i] .<= t .<= tfs[i]) for i=1:N)
 	activeRFs
 end
 
@@ -207,7 +194,7 @@ Tells if the sequence `seq` has elements with GR active.
 # Returns
 - `y`: (`::Bool`) boolean that tells whether or not the GR in the sequence is active
 """
-is_GR_on(x::Sequence) = any([sum(abs.(r.A)) for r = x.GR] .> 0)
+is_GR_on(x::Sequence) = any(any(!iszero,r.A) for r ∈ x.GR)
 
 """
     y = is_Gx_on(x::Sequence)
@@ -220,7 +207,7 @@ Tells if the sequence `seq` has elements with GR active in x direction.
 # Returns
 - `y`: (`::Bool`) boolean that tells whether or not the GRx in the sequence is active
 """
-is_Gx_on(x::Sequence) = any([sum(abs.(r.A)) for r = x.GR.x] .> 0)
+is_Gx_on(x::Sequence) = any(any(!iszero,r.A) for r ∈ x.GR.x)
 
 """
     y = is_Gy_on(x::Sequence)
@@ -233,7 +220,7 @@ Tells if the sequence `seq` has elements with GR active in y direction.
 # Returns
 - `y`: (`::Bool`) boolean that tells whether or not the GRy in the sequence is active
 """
-is_Gy_on(x::Sequence) = any([sum(abs.(r.A)) for r = x.GR.y] .> 0)
+is_Gy_on(x::Sequence) = any(any(!iszero,r.A) for r ∈ x.GR.y)
 
 """
     y = is_Gz_on(x::Sequence)
@@ -246,7 +233,7 @@ Tells if the sequence `seq` has elements with GR active in z direction.
 # Returns
 - `y`: (`::Bool`) boolean that tells whether or not the GRz in the sequence is active
 """
-is_Gz_on(x::Sequence) = any([sum(abs.(r.A)) for r = x.GR.z] .> 0)
+is_Gz_on(x::Sequence) = any(any(!iszero,r.A) for r ∈ x.GR.z)
 
 """
     y = is_Delay(x::Sequence)
@@ -427,9 +414,9 @@ Get RF centers and types (excitation or precession). Useful for k-space calculat
 """
 function get_RF_types(seq, t)
 	α = get_flip_angles(seq)
-	RF_mask = is_RF_on.(seq)
-	RF_ex = (α .<= 90.01) .* RF_mask
-	RF_rf = (α .>  90.01) .* RF_mask
+	RF_mask = map(is_RF_on,seq)
+	RF_ex = (α .≤ 90.01) .* RF_mask
+	RF_rf = (α .> 90.01) .* RF_mask
 	rf_idx = Int[]
 	rf_type = Int[]
 	T0 = get_block_start_times(seq)

@@ -87,11 +87,10 @@ function run_spin_precession_parallel!(
     Nthreads=Threads.nthreads(),
 ) where {T<:Real}
     parts = kfoldperm(length(obj), Nthreads)
-    dims = [Colon() for i in 1:(ndims(sig) - 1)] # :,:,:,... Ndim times
 
     ThreadsX.foreach(enumerate(parts)) do (i, p)
         run_spin_precession!(
-            @view(obj[p]), seq, @view(sig[dims..., i]), @view(Xt[p]), sim_method, backend, @view(prealloc[p])
+            @view(obj[p]), seq, selectdim(sig,ndims(sig),i), @view(Xt[p]), sim_method, backend, @view(prealloc[p])
         )
     end
 
@@ -128,11 +127,10 @@ function run_spin_excitation_parallel!(
     Nthreads=Threads.nthreads(),
 ) where {T<:Real}
     parts = kfoldperm(length(obj), Nthreads)
-    dims = [Colon() for i in 1:(ndims(sig) - 1)] # :,:,:,... Ndim times
 
     ThreadsX.foreach(enumerate(parts)) do (i, p)
         run_spin_excitation!(
-            @view(obj[p]), seq, @view(sig[dims..., i]), @view(Xt[p]), sim_method, backend, @view(prealloc[p])
+            @view(obj[p]), seq, selectdim(sig,ndims(sig),i), @view(Xt[p]), sim_method, backend, @view(prealloc[p])
         )
     end
 
@@ -182,24 +180,23 @@ function run_sim_time_iter!(
     rfs = 0
     samples = 1
     progress_bar = Progress(Nblocks; desc="Running simulation...")
-    prealloc_result = prealloc(sim_method, backend, obj, Xt, maximum(length.(parts))+1, precalc)
+    prealloc_result = prealloc(sim_method, backend, obj, Xt, maximum(length,parts)+1, precalc)
 
     for (block, p) in enumerate(parts)
         seq_block = @view seq[p]
         # Params
         # excitation_bool = is_RF_on(seq_block) #&& is_ADC_off(seq_block) #PATCH: the ADC part should not be necessary, but sometimes 1 sample is identified as RF in an ADC block
         Nadc = sum(seq_block.ADC)
-        acq_samples = samples:(samples + Nadc - 1)
-        dims = [Colon() for i in 1:(ndims(sig) - 1)] # :,:,:,... Ndim times
+        acq_samples = range(start=samples,length=Nadc)
         # Simulation wrappers
         if excitation_bool[block]
             run_spin_excitation_parallel!(
-                obj, seq_block, @view(sig[acq_samples, dims...]), Xt, sim_method, backend, prealloc_block(prealloc_result, block); Nthreads
+                obj, seq_block, selectdim(sig,1,acq_samples), Xt, sim_method, backend, prealloc_block(prealloc_result, block); Nthreads
             )
             rfs += 1
         else
             run_spin_precession_parallel!(
-                obj, seq_block, @view(sig[acq_samples, dims...]), Xt, sim_method, backend, prealloc_block(prealloc_result, block); Nthreads
+                obj, seq_block, selectdim(sig,1,acq_samples), Xt, sim_method, backend, prealloc_block(prealloc_result, block); Nthreads
             )
         end
         samples += Nadc
@@ -234,11 +231,9 @@ function get_sim_ranges(seqd::DiscreteSequence; Nblocks)
     N = length(seqd.Δt)
     k = min(N, Nblocks)
     n, r = divrem(N, k) #N >= k, N < k
-    breaks = collect(1:n:(N + 1))
-    for i in eachindex(breaks)
-        breaks[i] += i > r ? r : i - 1
-    end
-    breaks = breaks[2:(end - 1)] #Remove borders,
+    breaks = collect(range(start=1,step=n,stop=N+1))
+    breaks .+= min.(eachindex(breaks) .- 1,r)
+    deleteat!(breaks,extrema(eachindex(breaks)))
     #Iterate over B1 values to decide the simulation UnitRanges
     for i in eachindex(seqd.Δt)
         if abs(seqd.B1[i]) > 1e-9 #TODO: This is needed as the function ⏢ in get_rfs is not very accurate

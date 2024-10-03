@@ -2,10 +2,11 @@ module KomaNYUBase
 
 #IMPORT PACKAGES
 import Base.*, Base.+, Base.-, Base./, Base.vcat, Base.size, Base.abs, Base.getproperty
+import Printf
 #General
 using Reexport
 #Datatypes
-using Parameters
+using Parameters,StaticArrays
 #Simulation
 using Interpolations
 #Reconstruction

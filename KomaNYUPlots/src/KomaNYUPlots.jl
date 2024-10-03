@@ -1,13 +1,18 @@
 module KomaNYUPlots
 
 using KomaNYUBase
-using MAT, Interpolations, PlotlyJS
+using MAT, Interpolations
+@static if !Sys.isapple()
+    using PlotlyJS
+end
 
 include("ui/PlotBackends.jl")
 include("ui/DisplayFunctions.jl")
 
 using Reexport
-@reexport using PlotlyJS: savefig
+@static if !Sys.isapple()
+    @reexport using PlotlyJS: savefig
+end
 
 export plot_seq,
     plot_M0,

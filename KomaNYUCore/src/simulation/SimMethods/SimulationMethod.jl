@@ -10,7 +10,7 @@ include("Magnetization.jl")
 function sim_output_dim(
     obj::Phantom{T}, seq::Sequence, sys::Scanner, sim_method::SimulationMethod
 ) where {T<:Real}
-    return (sum(seq.ADC.N), 1) #Nt x Ncoils, This should consider the coil info from sys
+    return (sum(seq.ADC.N), size(obj.Bm,2)) #Nt × Nrx (storing B1m in Phantom because B1m depends on EP)
 end
 
 """Magnetization initialization for Bloch simulation method."""

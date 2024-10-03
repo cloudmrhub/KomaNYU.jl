@@ -31,14 +31,15 @@ julia> obj.ρ
 """
 @with_kw mutable struct Phantom{T<:Real}
     name::String           = "spins"
-    x                      :: AbstractVector{T}
-    y::AbstractVector{T}   = zeros(eltype(x), size(x))
-    z::AbstractVector{T}   = zeros(eltype(x), size(x))
-    ρ::AbstractVector{T}   = ones(eltype(x), size(x))
-    T1::AbstractVector{T}  = ones(eltype(x), size(x)) * 1_000_000
-    T2::AbstractVector{T}  = ones(eltype(x), size(x)) * 1_000_000
-    T2s::AbstractVector{T} = ones(eltype(x), size(x)) * 1_000_000
+    x::AbstractVector{T}
+    y::AbstractVector{T}   = zeros(T, size(x))
+    z::AbstractVector{T}   = zeros(T, size(x))
+    ρ::AbstractVector{T}   = ones(T, size(x))
+    T1::AbstractVector{T}  = ones(T, size(x)) * 1_000_000
+    T2::AbstractVector{T}  = ones(T, size(x)) * 1_000_000
+    T2s::AbstractVector{T} = ones(T, size(x)) * 1_000_000
     #Off-resonance related
+    Bm::AbstractMatrix{Complex{T}} = ones(Complex{T},length(x),1)
     Δw::AbstractVector{T} = zeros(eltype(x), size(x))
     #χ::Vector{SusceptibilityModel}
     #Diffusion
@@ -50,8 +51,8 @@ julia> obj.ρ
     motion::AbstractMotion{T} = NoMotion{eltype(x)}() 
 end
 
-const NON_STRING_PHANTOM_FIELDS = Iterators.filter(x -> fieldtype(Phantom, x) != String,         fieldnames(Phantom))
-const VECTOR_PHANTOM_FIELDS     = Iterators.filter(x -> fieldtype(Phantom, x) <: AbstractVector, fieldnames(Phantom))
+const NON_STRING_PHANTOM_FIELDS = filter(Base.Fix2(≢,String)∘Base.Fix1(fieldtype,Phantom),fieldnames(Phantom))
+const ARRAY_PHANTOM_FIELDS      = filter(Base.Fix2(<:,AbstractArray)∘Base.Fix1(fieldtype,Phantom),fieldnames(Phantom))
 
 """Size and length of a phantom"""
 size(x::Phantom) = size(x.ρ)
@@ -65,27 +66,19 @@ Base.view(x::Phantom, i::Integer) = @view(x[i:i])
 
 """Compare two phantoms"""
 function Base.:(==)(obj1::Phantom, obj2::Phantom)
-    if length(obj1) != length(obj2) return false end
-    return reduce(&, [getfield(obj1, field) == getfield(obj2, field) for field in NON_STRING_PHANTOM_FIELDS])
+    return length(obj1) == length(obj2) && all(getfield(obj1, field) == getfield(obj2, field) for field in NON_STRING_PHANTOM_FIELDS)
 end
 function Base.:(≈)(obj1::Phantom, obj2::Phantom)
-    if length(obj1) != length(obj2) return false end
-    return reduce(&, [getfield(obj1, field)  ≈ getfield(obj2, field) for field in NON_STRING_PHANTOM_FIELDS])
+    return length(obj1) == length(obj2) && all(getfield(obj1, field)  ≈ getfield(obj2, field) for field in NON_STRING_PHANTOM_FIELDS)
 end
 
 """Separate object spins in a sub-group"""
 function Base.getindex(obj::Phantom, p)
-    fields = []
-    for field in NON_STRING_PHANTOM_FIELDS
-        push!(fields, (field, getfield(obj, field)[p]))
-    end
+    fields = Dict(field => selectdim(getfield(obj,field),1,p) for field in NON_STRING_PHANTOM_FIELDS)
     return Phantom(; name=obj.name, fields...)
 end
 function Base.view(obj::Phantom, p)
-    fields = []
-    for field in NON_STRING_PHANTOM_FIELDS
-        push!(fields, (field, @view(getfield(obj, field)[p])))
-    end
+    fields = Dict(field => selectdim(getfield(obj,field),1,p) for field in NON_STRING_PHANTOM_FIELDS)
     return Phantom(; name=obj.name, fields...)
 end
 
@@ -110,13 +103,7 @@ end
 end
 
 """dims = get_dims(obj)"""
-function get_dims(obj::Phantom)
-    dims = Bool[]
-    push!(dims, any(x -> x != 0, obj.x))
-    push!(dims, any(x -> x != 0, obj.y))
-    push!(dims, any(x -> x != 0, obj.z))
-    return dims
-end
+get_dims(obj::Phantom) = map(Base.Fix1(any,!iszero),(obj.x,obj.y,obj.z))
 
 """
     obj = heart_phantom(

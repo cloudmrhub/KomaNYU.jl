@@ -44,3 +44,10 @@ julia> sys.B0
     RF_dead_time_T::Real=100e-6
     ADC_dead_time_T::Real=10e-6
 end
+
+function Base.string(x::Scanner)
+    return Printf.@sprintf(
+        "Scanner[ B₀: %.f T | B₁: %.f μT | Gmax: %.f mT/m | Smax: %.f T/m/s | ADC Δt: %.f μs | Seq Δt: %.f μs | Grad Δt: %.f μs | RF Δt: %.f μs | RF ring ↓: %.f μs | RF dead Δt: %.f μs | ADC dead Δt: %.f μs ]\n",
+        x.B0, x.B1*1e6, x.Gmax*1e3, x.Smax, x.ADC_Δt*1e6, x.seq_Δt*1e6, x.GR_Δt*1e6, x.RF_Δt*1e6, x.RF_ring_down_T*1e6, x.RF_dead_time_T*1e6, x.ADC_dead_time_T*1e6
+    )
+end

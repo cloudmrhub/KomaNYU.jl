@@ -55,7 +55,7 @@ mul!(s::Spinor{T}, M::Mag) where {T<:Real} = begin
 end
 mul!(s::Spinor{T}, M::Mag, Maux_xy, Maux_z) where {T<:Real} = begin
     @. Maux_xy = T(2)*conj(s.α)*s.β*M.z+conj(s.α)^2*M.xy-s.β^2*conj(M.xy)
-    @. Maux_z = (abs(s.α)^2 -abs(s.β)^2)*M.z-T(2) *real(s.α*s.β*conj(M.xy))
+    @. Maux_z = (abs(s.α)^2 -abs(s.β)^2)*M.z-T(2)*real(s.α*s.β*conj(M.xy))
     @. M.xy = Maux_xy
     @. M.z = Maux_z
 end

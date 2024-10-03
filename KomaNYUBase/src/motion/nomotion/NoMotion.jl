@@ -15,6 +15,7 @@ struct NoMotion{T<:Real} <: AbstractMotion{T} end
 
 Base.getindex(mv::NoMotion, p) = mv 
 Base.view(mv::NoMotion, p)     = mv
+Base.selectdim(mv::NoMotion,::Integer,::Any) = mv
 
 """ Addition of NoMotions """
 Base.vcat(m1::NoMotion, m2::NoMotion, Ns1, Ns2) = m1

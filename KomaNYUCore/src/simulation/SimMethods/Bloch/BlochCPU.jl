@@ -8,7 +8,7 @@ struct BlochCPUPrealloc{T} <: PreallocResult{T}
     ΔBz::AbstractVector{T}            # Vector{T}(Nspins x 1)
 end
 
-Base.view(p::BlochCPUPrealloc, i::UnitRange) = begin
+function Base.view(p::BlochCPUPrealloc, i::UnitRange)
     @views BlochCPUPrealloc(
         p.M[i],
         p.Bz_old[i],
@@ -65,17 +65,17 @@ function run_spin_precession!(
     Mxy = prealloc.M.xy
     ΔBz = prealloc.ΔBz
     fill!(ϕ, zero(T))
-    @. Bz_old = x[:,1] * seq.Gx[1] + y[:,1] * seq.Gy[1] + z[:,1] * seq.Gz[1] + ΔBz
+    @inbounds @. Bz_old = x[:,1] * seq.Gx[1] + y[:,1] * seq.Gy[1] + z[:,1] * seq.Gz[1] + ΔBz
 
     # Fill sig[1] if needed
     ADC_idx = 1
     if (seq.ADC[1])
-        sig[1] = sum(M.xy)
+        sig[1,:] .= p.Bm'*Mxy
         ADC_idx += 1
     end
 
     t_seq = zero(T) # Time
-    for seq_idx=2:length(seq.t)
+    @inbounds for seq_idx=2:length(seq.t)
         x, y, z = get_spin_coords(p.motion, p.x, p.y, p.z, seq.t[seq_idx])
         t_seq += seq.Δt[seq_idx-1]
 
@@ -92,7 +92,7 @@ function run_spin_precession!(
             #Reset Spin-State (Magnetization). Only for FlowPath
             outflow_spin_reset!(Mxy, seq.t[seq_idx], p.motion)
 
-            sig[ADC_idx] = sum(Mxy) 
+            sig[ADC_idx,:] = p.Bm'*Mxy
             ADC_idx += 1
         end
 
@@ -139,12 +139,12 @@ function run_spin_excitation!(
         x, y, z = get_spin_coords(p.motion, p.x, p.y, p.z, s.t)
         #Effective field
         @. Bz = (s.Gx * x + s.Gy * y + s.Gz * z) + ΔBz - s.Δf / T(γ) # ΔB_0 = (B_0 - ω_rf/γ), Need to add a component here to model scanner's dB0(x,y,z)
-        @. B = sqrt(abs(s.B1)^2 + abs(Bz)^2)
-        @. B[B == 0] = eps(T)
+        @. B = sqrt(abs2(s.B1) + abs2(Bz))
+        @inbounds @. B[iszero(B)] = eps(T)
         #Spinor Rotation
         @. φ = T(-π * γ) * (B * s.Δt) # TODO: Use trapezoidal integration here (?),  this is just Forward Euler 
-        @. α = cos(φ) - Complex{T}(im) * (Bz / B) * sin(φ)
-        @. β = -Complex{T}(im) * (s.B1 / B) * sin(φ)
+        @. α = cos(φ) - 1im * (Bz / B) * sin(φ)
+        @. β = -1im * (s.B1 / B) * sin(φ)
         mul!(Spinor(α, β), M, Maux_xy, Maux_z)
         #Relaxation
         @. M.xy = M.xy * exp(-s.Δt / p.T2)

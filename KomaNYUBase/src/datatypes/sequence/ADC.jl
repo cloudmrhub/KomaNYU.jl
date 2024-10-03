@@ -28,14 +28,9 @@ mutable struct ADC
     delay::Float64
     Δf::Float64
     ϕ::Float64
-    function ADC(N, T, delay, Δf, ϕ)
-        T < 0 || delay < 0 ? error("ADC timings must be positive.") : new(N, T, delay, Δf, ϕ)
-    end
-    function ADC(N, T, delay)
-		T < 0 || delay < 0 ? error("ADC timings must be positive.") : new(N, T, delay, 0, 0)
-    end
-    function ADC(N, T)
-		T < 0 ? error("ADC timings must be positive.") : new(N, T, 0, 0, 0)
+    function ADC(N, T, delay=0.0, Δf=0.0, ϕ=0.0)
+        (T < 0 || delay < 0) && throw(DomainErr("ADC timings must be positive."))
+        new(N, T, delay, Δf, ϕ)
     end
 end
 
@@ -63,7 +58,7 @@ directly without the need to iterate elementwise.
 getproperty(x::Vector{ADC}, f::Symbol) = begin
     if f == :dur
 		dur.(x)
-    elseif f in fieldnames(ADC)
+    elseif hasfield(ADC,f)
         getfield.(x, f)
     else
         getfield(x, f)
@@ -85,7 +80,7 @@ function get_adc_sampling_times(seq)
     T0 = get_block_start_times(seq)
     t = zeros(Float64, sum(seq.ADC.N))
     idx = 1
-    for i = 1:length(seq)
+    for i ∈ 1:length(seq)
         if is_ADC_on(seq[i])
             N = seq.ADC[i].N
             t[idx:idx+N-1] .= times(seq.ADC[i]) .+ T0[i]

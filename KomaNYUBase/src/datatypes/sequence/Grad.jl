@@ -9,11 +9,12 @@ Rotates vector counter-clockwise with respect to the x-axis.
 # Returns
 - `Rx`: (`::Matrix{Int64}`) rotation matrix
 """
-rotx(θ::Real) = [
-    1  0  0
-    0 cos(θ) -sin(θ)
-    0 sin(θ) cos(θ)
-]
+function rotx(θ::Real)
+    (s,c) = sincos(θ)
+    @SMatrix [1  0  0
+              0  c -s
+              0  s  c]
+end
 
 """
     Ry = roty(θ::Real)
@@ -26,11 +27,12 @@ Rotates vector counter-clockwise with respect to the y-axis.
 # Returns
 - `Ry`: (`::Matrix{Int64}`) rotation matrix
 """
-roty(θ::Real) = [
-    cos(θ) 0 sin(θ)
-    0  1  0
-    -sin(θ) 0  cos(θ)
-]
+function roty(θ::Real)
+    (s,c) = sincos(θ)
+    @SMatrix [ c  0  s
+               0  1  0
+              -s  0  c]
+end
 
 """
     Rz = rotz(θ::Real)
@@ -43,11 +45,12 @@ Rotates vector counter-clockwise with respect to the z-axis.
 # Returns
 - `Rz`: (`::Matrix{Int64}`) rotation matrix
 """
-rotz(θ::Real) = [
-    cos(θ) -sin(θ) 0
-    sin(θ) cos(θ) 0
-    0   0   1
-]
+function rotz(θ::Real)
+    (s,c) = sincos(θ)
+    @SMatrix [c -s  0
+              s  c  0
+              0  0  1]
+end
 
 """
     gr = Grad(A, T)
@@ -75,42 +78,22 @@ julia> gr = Grad(1, 1, 0.1, 0.1, 0.2)
 julia> seq = Sequence([gr]); plot_seq(seq)
 ```
 """
-mutable struct Grad
+mutable struct Grad{V <: Real}
     A
     T
-    rise::Real
-    fall::Real
-    delay::Real
-    first
-    last
+    rise::V
+    fall::V
+    delay::V
+    first::V
+    last::V
     function Grad(A, T, rise, fall, delay)
-        return if all(T .< 0) || rise < 0 || fall < 0 || delay < 0
-            error("Gradient timings must be positive.")
-        else
-            new(A, T, rise, fall, delay, 0.0, 0.0)
-        end
+        (any(<(0),T) || rise < 0 || fall < 0 || delay < 0) && throw(ArgumentError("gradient timings must be positive"))
+        V = Base.promote_typeof(rise,fall,delay)
+        return new{V}(A, T, promote(rise, fall, delay)..., zero(V), zero(V))
     end
-    function Grad(A, T, rise, delay)
-        return if all(T .< 0) < 0 || rise < 0 || delay < 0
-            error("Gradient timings must be positive.")
-        else
-            new(A, T, rise, rise, delay, 0.0, 0.0)
-        end
-    end
-    function Grad(A, T, rise)
-        return if all(T .< 0) < 0 || rise < 0
-            error("Gradient timings must be positive.")
-        else
-            new(A, T, rise, rise, 0.0, 0.0, 0.0)
-        end
-    end
-    function Grad(A, T)
-        return if all(T .< 0) < 0
-            error("Gradient timings must be positive.")
-        else
-            new(A, T, 0.0, 0.0, 0.0, 0.0, 0.0)
-        end
-    end
+    Grad(A, T, rise, delay) = Grad(A, T, rise, rise, delay)
+    Grad(A, T, rise) = Grad(A, T, rise, zero(rise))
+    Grad(A, T) = Grad(A, T, zero(Base.promote_eltype(A,T)))
 end
 
 """
@@ -125,7 +108,7 @@ Generates an arbitrary gradient waveform defined by the function `f` in the inte
 - `N`: (`::Integer`, `=300`) number of samples of the gradient waveform
 
 # Keywords
-- `delay`: (`::Real`, `=0`, `[s]`) delay time of the waveform
+- `delay`: (`::Real`, `=0.0`, `[s]`) delay time of the waveform
 
 # Returns
 - `gr`: (`::Grad`) gradient struct
@@ -137,10 +120,10 @@ julia> gx = Grad(t -> sin(π*t / 0.8), 0.8)
 julia> seq = Sequence([gx]); plot_seq(seq)
 ```
 """
-Grad(f::Function, T::Real, N::Integer=300; delay::Real=0) = begin
-    t = range(0.0, T; length=N)
-    G = f.(t)
-    return Grad(G, T, 0.0, 0.0, delay)
+function Grad(f::Function, T::Real, N::Integer=300; delay::Real=0.0)
+    t = range(zero(T), T; length=N)
+    G = map(f,t)
+    return Grad(G, T, zero(delay), zero(delay), delay)
 end
 
 """
@@ -158,8 +141,8 @@ Base.show(io::IO, x::Grad) = begin
     r(x) = round.(x, digits=4)
     compact = get(io, :compact, false)
     if !compact
-        wave = length(x.A) == 1 ? r(x.A * 1e3) : "∿"
-        if x.rise == x.fall == 0.0
+        wave = isone(length(x.A)) ? r(x.A * 1e3) : "∿"
+        if iszero(x.rise) && iszero(x.fall)
             print(
                 io,
                 (x.delay > 0 ? "←$(r(x.delay*1e3)) ms→ " : "") *
@@ -197,17 +180,20 @@ directly without the need to iterate elementwise.
 - `y`: (`::Array{Any}`) vector or matrix with the property defined
     by the symbol `f` for all elements of the Grad vector or matrix `x`
 """
-getproperty(x::Array{Grad}, f::Symbol) = begin
+function getproperty(x::Array{<:Grad}, f::Symbol)
     if f == :x
-        @view x[1, :]
-    elseif f == :y && size(x, 1) >= 2
-        @view x[2, :]
-    elseif f == :z && size(x, 1) >= 3
-        @view x[3, :]
+        size(x,1) >= 2 || throw(ArgumentError("grad array must have leading dimension ≥ 1 to access field x"))
+        selectdim(x,1,1)
+    elseif f == :y
+        size(x,1) >= 2 || throw(ArgumentError("grad array must have leading dimension ≥ 2 to access field y"))
+        selectdim(x,1,2)
+    elseif f == :z
+        size(x,1) >= 3 || throw(ArgumentError("grad array must have leading dimension ≥ 3 to access field z"))
+        selectdim(x,1,3)
     elseif f == :dur
         dur(x)
-    elseif f in fieldnames(Grad)
-        getfield.(x, f)
+    elseif hasfield(Grad,f)
+        map(Base.Fix2(getfield,f),x)
     else
         getfield(x, f)
     end
@@ -222,31 +208,20 @@ end
 
 # Gradient operations
 # zeros(Grad, M, N)
-Base.zero(::Type{Grad}) = Grad(0.0, 0.0)
+Base.zero(::Type{<:Grad{V}}) where {V} = Grad(zero(V), zero(V))
 # Rotation
-Base.zero(::Grad) = Grad(0.0, 0.0)
+Base.zero(::Grad{V}) where {V} = zero(Grad{V})
 *(α::Real, x::Grad) = Grad(α * x.A, x.T, x.rise, x.fall, x.delay)
 +(x::Grad, y::Grad) = Grad(x.A .+ y.A, max(x.T, y.T), max(x.rise, y.rise), max(x.fall, y.fall), max(x.delay, y.delay)) #TODO: solve this in a better way (by "stacking" gradients) issue #487
 # Others
 *(x::Grad, α::Real) = Grad(α * x.A, x.T, x.rise, x.fall, x.delay)
 /(x::Grad, α::Real) = Grad(x.A / α, x.T, x.rise, x.fall, x.delay)
--(x::Grad) = -1 * x
+-(x::Grad) = Grad(-x.A, x.T, x.rise, x.fall, x.delay)
 -(x::Grad, y::Grad) = Grad(x.A .- y.A, max(x.T, y.T), max(x.rise, y.rise), max(x.fall, y.fall), max(x.delay, y.delay)) #TODO: solve this in a better way (by "stacking" gradients) issue #487
 
 # Gradient functions
-function vcat(x::Array{Grad,1}, y::Array{Grad,1})
-    return [i == 1 ? x[j] : y[j] for i in 1:2, j in 1:length(x)]
-end
-function vcat(x::Array{Grad,1}, y::Array{Grad,1}, z::Array{Grad,1})
-    return [
-        if i == 1
-            x[j]
-        elseif i == 2
-            y[j]
-        else
-            z[j]
-        end for i in 1:3, j in 1:length(x)
-    ]
+function vcat(x::Vararg{Vector{<:Grad},N}) where {N}
+    return cat(map(transpose,x)...;dims=1)
 end
 
 """
@@ -263,5 +238,5 @@ Duration time in [s] of Grad struct or Grad Array.
 - `y`: (`::Float64`, `[s]`) duration of the Grad struct or Grad Array
 """
 dur(x::Grad) = x.delay + x.rise + sum(x.T) + x.fall
-dur(x::Vector{Grad}) = maximum(dur.(x); dims=1)[:]
-dur(x::Matrix{Grad}) = maximum(dur.(x); dims=1)[:]
+dur(x::Vector{<:Grad}) = maximum(dur,x;dims=1)
+dur(x::Matrix{<:Grad}) = reshape(maximum(dur,x;dims=1),:)

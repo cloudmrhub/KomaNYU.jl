@@ -28,18 +28,9 @@ mutable struct RF
     T
     Δf
     delay::Real
-    function RF(A, T, Δf, delay)
-        return if any(T .< 0) || delay < 0
-            error("RF timings must be non-negative.")
-        else
-            new(A, T, Δf, delay)
-        end
-    end
-    function RF(A, T, Δf)
-        return any(T .< 0) ? error("RF timings must be non-negative.") : new(A, T, Δf, 0.0)
-    end
-    function RF(A, T)
-        return any(T .< 0) ? error("RF timings must be non-negative.") : new(A, T, 0.0, 0.0)
+    function RF(A, T, Δf = 0.0, delay = 0.0)
+        (any(<(0),T) || delay < 0) && DomainError((T,delay),"RF timings must be non-negative.")
+        return new(A, T, Δf, delay)
     end
 end
 
