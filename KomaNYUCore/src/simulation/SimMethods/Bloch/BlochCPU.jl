@@ -70,12 +70,12 @@ function run_spin_precession!(
     # Fill sig[1] if needed
     ADC_idx = 1
     if (seq.ADC[1])
-        sig[1,:] .= p.Bm'*Mxy
+        sig[1,:] .= p.Bm'*M.xy
         ADC_idx += 1
     end
 
     t_seq = zero(T) # Time
-    @inbounds for seq_idx=2:length(seq.t)
+    for seq_idx=2:length(seq.t)
         x, y, z = get_spin_coords(p.motion, p.x, p.y, p.z, seq.t[seq_idx])
         t_seq += seq.Δt[seq_idx-1]
 
@@ -92,7 +92,7 @@ function run_spin_precession!(
             #Reset Spin-State (Magnetization). Only for FlowPath
             outflow_spin_reset!(Mxy, seq.t[seq_idx], p.motion)
 
-            sig[ADC_idx,:] = p.Bm'*Mxy
+            sig[ADC_idx,:] .= p.Bm'*Mxy
             ADC_idx += 1
         end
 

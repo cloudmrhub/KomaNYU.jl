@@ -19,7 +19,6 @@ Divides a list of indices from 1 to `N` into `k` groups.
     `breaks` input array
 """
 function kfoldperm(N, k; breaks=[])
-	k = min(N, k)
 	n, r = divrem(N, k) #N >= k, N < k
 	b = collect(1:n:N+1)
 	Nb = length(b)
