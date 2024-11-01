@@ -1,7 +1,7 @@
 name = "KomaNYUPlots"
 uuid = "9cffba9e-a160-43d8-9293-b8def8c63cbd"
 authors = ["Carlos Castillo Passi <cncastillo@uc.cl>"]
-version = "0.9.0"
+version = "0.9.1"
 
 [deps]
 Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
