@@ -18,6 +18,7 @@ MAT = "0.10"
 MRIBase = "0.4"
 Parameters = "0.12"
 Reexport = "1"
+StaticArrays = "1"
 julia = "1.9"
 
 [workspace]
