@@ -316,7 +316,7 @@ function fix_first_last_grads!(seq::Sequence)
 end
 
 """
-    seq = read_seq(filename)
+    seq = read_seq_pulseq(filename)
 
 Returns the Sequence struct from a Pulseq file with `.seq` extension.
 
@@ -330,13 +330,13 @@ Returns the Sequence struct from a Pulseq file with `.seq` extension.
 ```julia-repl
 julia> seq_file = joinpath(dirname(pathof(KomaNYU)), "../examples/1.sequences/spiral.seq")
 
-julia> seq = read_seq(seq_file)
+julia> seq = read_seq_pulseq(seq_file)
 
 julia> plot_seq(seq)
 ```
 """
-function read_seq(filename)
-    @info "Loading sequence $(basename(filename)) ..."
+function read_seq_pulseq(filename)
+    @info "Loading Pulseq sequence $(basename(filename)) ..."
     version_combined = 0
     version_major = 0
     version_minor = 0
@@ -472,6 +472,16 @@ function read_seq(filename)
     seq.DEF["Nz"] = get(seq.DEF, "Nz", length(unique(seq.RF.Δf)))
     seq.DEF["Ny"] = get(seq.DEF, "Ny", sum(map(is_ADC_on, seq)) ÷ seq.DEF["Nz"])
     #Koma sequence
+    println("Sequence: $seq")
+    # for i = 1:5
+    # # for i = 1:length(seq)
+    #     println("Block $i: $(seq[i])")
+    #     println("ADC: $(seq.ADC[i])")
+    #     println("RF: $(seq.RF[i])")
+    #     println("GR: $(seq.GR[i])")
+    # end
+    # println("ADC details: $(seq.ADC)")
+    # println("Sequence details: $(seq.DEF)")
     return seq
 end
 
@@ -676,7 +686,7 @@ end
 """
     seq = get_block(obj, i)
 
-Block sequence definition. Used internally by [`read_seq`](@ref).
+Block sequence definition. Used internally by [`read_seq_pulseq`](@ref).
 
 # Arguments
 - `obj`: (`::Dict{String, Any}`) main dictionary
