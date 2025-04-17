@@ -1,7 +1,7 @@
 name = "KomaNYU"
 uuid = "6ba24435-1b4f-4a37-bd7b-5547d061c7b4"
 authors = ["cloudmr-dev"]
-version = "0.9.1"
+version = "0.9.2"
 
 [deps]
 AssetRegistry = "bf4720bc-e11a-5d0c-854e-bdca1663c893"
@@ -31,7 +31,7 @@ KomaNYUFiles = "0.9"
 KomaNYUPlots = "0.9"
 MAT = "0.10"
 MRIReco = "0.6, 0.7, 0.8, 0.9"
-NIfTI = "0.4.1"
+NIfTI = "0.6"
 Reexport = "1"
 julia = "1.9"
 
