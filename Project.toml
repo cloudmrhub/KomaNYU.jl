@@ -1,7 +1,7 @@
 name = "KomaNYU"
 uuid = "6ba24435-1b4f-4a37-bd7b-5547d061c7b4"
 authors = ["cloudmr-dev"]
-version = "0.9.2"
+version = "0.9.3"
 
 [deps]
 AssetRegistry = "bf4720bc-e11a-5d0c-854e-bdca1663c893"
@@ -24,7 +24,7 @@ AssetRegistry = "0.1"
 Blink = "0.12"
 FFTW = "1.0"
 Interact = "0.10"
-Interpolations = "0.15.1"
+Interpolations = "0.15"
 KomaNYUBase = "0.9"
 KomaNYUCore = "0.9"
 KomaNYUFiles = "0.9"
