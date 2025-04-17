@@ -1,7 +1,7 @@
 name = "KomaNYU"
 uuid = "6ba24435-1b4f-4a37-bd7b-5547d061c7b4"
 authors = ["cloudmr-dev"]
-version = "0.9.0"
+version = "0.9.1"
 
 [deps]
 AssetRegistry = "bf4720bc-e11a-5d0c-854e-bdca1663c893"
