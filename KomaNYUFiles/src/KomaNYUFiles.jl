@@ -7,7 +7,6 @@ using Reexport
 using MRIFiles
 using JSON
 using Interpolations
-using Plots
 import MRIFiles: insertNode
 @reexport using MRIFiles: ISMRMRDFile
 @reexport using FileIO: save

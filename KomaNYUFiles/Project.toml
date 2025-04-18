@@ -1,7 +1,7 @@
 name = "KomaNYUFiles"
 uuid = "8ddc4e30-e12a-441d-8de6-881fa077b415"
 authors = ["Carlos Castillo Passi <cncastillo@uc.cl>"]
-version = "0.9.4"
+version = "0.9.5"
 
 [deps]
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
