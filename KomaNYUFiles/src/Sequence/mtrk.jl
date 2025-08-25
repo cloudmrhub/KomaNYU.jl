@@ -24,6 +24,7 @@ _getindex(key::Key) where {Key} = Base.Fix2(Base.getindex,key)
 # Helper function: returns a function that gets the given field from a struct
 _getfield(s::Symbol) = Base.Fix2(Base.getfield,s)
 
+
 # Truncates the amplitude or samples of a step to fit within [start, stop]
 function truncate_step!(step::Dict{String,Any},start::Int,stop::Int)
     step_start = step["time"]
@@ -60,15 +61,55 @@ function read_seq_mtrk(filename)
     raw_dict = JSON.parse(read(filename,String))
     dict = (;((Symbol(k),raw_dict[k]) for k in ("instructions","objects","arrays","equations","infos","settings"))...)
     haskey(dict.instructions,"main") || throw(ArgumentError("\"main\" block was not defined in \"instructions\" block"))
+    
+    # Artificially adding a "mark" at the end of any block that does not end with a "mark"
+    @debug "Checking for missing \"mark\"s..."
+    for block in values(dict.instructions)
+        steps = block["steps"]
+        if !isempty(last(steps)["action"]) && last(steps)["action"] == "submit" && steps[end-1]["action"]!="mark" && steps[end-1]["action"]!="run_block" && steps[end-1]["action"]!="loop"
+            end_time = 0.0
+            for event in steps
+                if haskey(event,"time")
+                    start_time = event["time"]
+                    duration = dict.objects[event["object"]]["duration"]
+                    if start_time + duration > end_time
+                        end_time = start_time + duration
+                    end
+                end
+            end
+            push!(steps,Dict{String,Any}("action" => "mark","time" => end_time))
+            # Add a mark event with its time set to the duration of the previous block. 
+        end
+    end
 
+   # assign mark if missing
     @debug "Assigning missing \"mark\"s..."
-    # assign mark if missing
     for block in values(dict.instructions)
         steps = block["steps"]
         any(step["action"] ∈ (("loop","run_block")) for step in steps) && continue
         filter!(∈(("rf","grad","adc","mark"))∘_getindex("action"),steps)
         if last(steps)["action"] != "mark"
             push!(steps,Dict{String,Any}("action" => "mark","time" => maximum(_getindex("time"),steps)))
+        end
+    end
+
+    ## Interpreting time equations
+    for block in values(dict.instructions)
+        steps = block["steps"]
+        for step in steps
+            if haskey(step,"time") && typeof(step["time"]) != Int
+                equation_name = step["time"]["equation"]
+                # Replace set(<variable>) with its value from dict.settings
+                equation_str = string(dict.equations[equation_name]["equation"])
+                pattern = r"set\((\w+)\)"
+                replaced_eq = equation_str
+                for m in eachmatch(pattern, equation_str)
+                    varname = m.captures[1]
+                    value = string(dict.settings[varname])
+                    replaced_eq = replace(replaced_eq, m.match => value)
+                end
+                step["time"] = Int(eval(Meta.parse(replaced_eq)))
+            end
         end
     end
 
@@ -119,6 +160,7 @@ function read_seq_mtrk(filename)
             offset = new_time
         end
     end
+
 
     # keep relevant events and sort by start time
     filter!(∈(("rf","grad","adc"))∘_getindex("action"),steps)
@@ -186,9 +228,23 @@ function read_seq_mtrk(filename)
                 prev_stop = step["stop"]
             end
         end
+        # Case for waveforms with same length and start time
+        if i > 1
+            prev_step = steps[i-1]
+            prev_amp = get(prev_step, "amplitude", [])
+            if !isempty(amp) && !isempty(prev_amp) &&
+               length(amp) == length(prev_amp) &&
+               step["time"] == prev_step["time"]
+                # Both waveforms start at the same time and have same length
+                push!(all_times, step["stop"]) 
+            end
+        end
     end
     sort!(all_times)
     unique!(all_times)
+    if prev_stop > all_times[end]
+        push!(all_times, prev_stop)
+    end
 
     # Adding delays to the sequence
     # Compute per-channel delays for each (start, stop) interval
@@ -254,17 +310,16 @@ function read_seq_mtrk(filename)
         phase = filter(==("phase")∘_getindex("action"),group)
         adc = filter(==("adc")∘_getindex("action"),group)
 
-        # Initialize amplitude values for each channel
-        initValue_read  = isempty(seq.read)  ? zero(Float64) : seq.read[end].A[end]
-        initValue_phase = isempty(seq.phase) ? zero(Float64) : seq.phase[end].A[end]
-        initValue_slice = isempty(seq.slice) ? zero(Float64) : seq.slice[end].A[end]
-        initValue_rf    = isempty(seq.rf)    ? zero(ComplexF64) : seq.rf[end].A[end]
-
         # Sum amplitudes for each channel in this group
-        readA  = mapreduce(_getindex("amplitude"),.+, read;init=zero(Float64))
-        phaseA = mapreduce(_getindex("amplitude"),.+, phase;init=zero(Float64))
-        sliceA = mapreduce(_getindex("amplitude"),.+, slice;init=zero(Float64))
-        rfA    = mapreduce(_getindex("amplitude"),.+, rf;init=zero(ComplexF64))
+        function pad_to_max(arrs, padval=0.0)
+            maxlen = maximum(length.(arrs))
+            return [vcat(arr, fill(padval, maxlen - length(arr))) for arr in arrs]
+        end
+
+        readA  = isempty(read)  ? zeros(Float64, 0) : reduce(+, pad_to_max(map(_getindex("amplitude"), read)))
+        phaseA = isempty(phase) ? zeros(Float64, 0) : reduce(+, pad_to_max(map(_getindex("amplitude"), phase)))
+        sliceA = isempty(slice) ? zeros(Float64, 0) : reduce(+, pad_to_max(map(_getindex("amplitude"), slice)))
+        rfA    = isempty(rf)    ? zeros(ComplexF64, 0) : reduce(+, pad_to_max(map(_getindex("amplitude"), rf), 0.0 + 0.0im))
         adcS   = isempty(adc) ? 0 : only(adc)["samples"]
        
         # If any channel is active, create a new sequence step; otherwise, accumulate delay
