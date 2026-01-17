@@ -118,7 +118,7 @@ jobs:
       - uses: julia-actions/julia-processcoverage@v1
         with:
           directories: src
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           files: lcov.info
           flags: komamri
@@ -126,7 +126,7 @@ jobs:
       - uses: julia-actions/julia-processcoverage@v1
         with:
           directories: KomaNYUBase/src
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           files: lcov.info
           flags: base
@@ -134,7 +134,7 @@ jobs:
       - uses: julia-actions/julia-processcoverage@v1
         with:
           directories: KomaNYUCore/src,KomaNYUCore/ext
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           files: lcov.info
           flags: core
@@ -142,7 +142,7 @@ jobs:
       - uses: julia-actions/julia-processcoverage@v1
         with:
           directories: KomaNYUPlots/src,KomaNYUPlots/ext
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           files: lcov.info
           flags: plots
@@ -150,7 +150,7 @@ jobs:
       - uses: julia-actions/julia-processcoverage@v1
         with:
           directories: KomaNYUFiles/src
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           files: lcov.info
           flags: files
